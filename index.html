@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>v8cloud – Classes & Behaviour</title>
+  <title>v8cloud – Full Behaviour & Classes System</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Firebase v9 compat CDN -->
@@ -11,7 +11,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
   <style>
-    /* (UI styles unchanged — full system preserved) */
     * { box-sizing: border-box; }
     body {
       margin: 0;
@@ -25,7 +24,7 @@
     }
     .app-shell {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1400px;
       background: #020617;
       border-radius: 16px;
       border: 1px solid #1f2937;
@@ -94,7 +93,7 @@
     .main-layout {
       display: grid;
       grid-template-columns: 260px 1fr;
-      min-height: 520px;
+      min-height: 620px;
     }
     .sidebar {
       border-right: 1px solid #1f2937;
@@ -129,6 +128,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+      position: relative;
     }
     .panel {
       border-radius: 12px;
@@ -171,6 +171,10 @@
       border-color: #ef4444;
       background: #b91c1c;
     }
+    .btn-secondary {
+      border-color: #6b7280;
+      background: #374151;
+    }
     .btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
@@ -181,7 +185,7 @@
       gap: 8px;
       margin-top: 8px;
     }
-    .input-row input {
+    .input-row input, .input-row select, .input-row textarea {
       flex: 1;
       min-width: 140px;
       padding: 6px 8px;
@@ -190,6 +194,15 @@
       background: #020617;
       color: #e5e7eb;
       font-size: 0.8rem;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+    .status-line {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-top: 6px;
     }
     .classes-list {
       display: flex;
@@ -212,6 +225,9 @@
     }
     .class-item small {
       color: #9ca3af;
+      font-size: 0.75rem;
+    }
+    .class-item button {
       font-size: 0.75rem;
     }
     .behaviour-grid {
@@ -263,10 +279,89 @@
       border-color: #6b7280;
       background: #374151;
     }
-    .status-line {
-      font-size: 0.8rem;
+    .seating-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .seat {
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      background: #0b1120;
+      padding: 6px;
+      font-size: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .seat.empty {
+      opacity: 0.5;
+    }
+    .seat span {
+      color: #e5e7eb;
+    }
+    .seat small {
       color: #9ca3af;
-      margin-top: 6px;
+      font-size: 0.7rem;
+    }
+    .students-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .student-item {
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      background: #0b1120;
+      padding: 8px 10px;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .student-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .student-main span {
+      color: #e5e7eb;
+    }
+    .student-main small {
+      color: #9ca3af;
+      font-size: 0.75rem;
+    }
+    .student-flags {
+      font-size: 0.75rem;
+      color: #f97316;
+    }
+    .student-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .student-actions button {
+      font-size: 0.75rem;
+    }
+    .export-area {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .export-output {
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      padding: 8px;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      max-height: 200px;
+      overflow-y: auto;
+      white-space: pre;
     }
     .role-modal-backdrop {
       position: fixed;
@@ -354,7 +449,7 @@
   <div class="app-shell">
     <div class="top-bar">
       <div class="top-left">
-        <h1>v8cloud – Classes & Behaviour</h1>
+        <h1>v8cloud – Full Behaviour & Classes System</h1>
         <div class="subtitle" id="roleSubtitle">Role: <span id="roleSubtitleText">Not selected</span></div>
       </div>
       <div class="top-right">
@@ -372,7 +467,10 @@
       <div class="sidebar">
         <h2>Navigation</h2>
         <button class="nav-button active" data-target="classesPanel">Classes</button>
+        <button class="nav-button" data-target="seatingPanel">Seating plan</button>
         <button class="nav-button" data-target="behaviourPanel">Behaviour</button>
+        <button class="nav-button" data-target="studentsPanel">Students</button>
+        <button class="nav-button" data-target="exportPanel">Export / Logs</button>
 
         <div class="panel" style="margin-top:12px;">
           <h3>Authentication</h3>
@@ -391,25 +489,69 @@
       </div>
 
       <div class="content" id="contentArea">
+        <!-- CLASSES PANEL -->
         <div class="panel" id="classesPanel">
           <h3>Classes</h3>
           <div class="panel-subtitle">
-            Simple class list stored per user. You can expand this later into full seating plans.
+            Manage your classes. Each class can have its own seating plan and behaviour context.
           </div>
           <div class="input-row">
             <input type="text" id="newClassName" placeholder="Class name (e.g., 9A Maths)" />
             <input type="text" id="newClassRoom" placeholder="Room (e.g., B12)" />
+            <select id="newClassYear">
+              <option value="">Year group (optional)</option>
+              <option>Year 7</option>
+              <option>Year 8</option>
+              <option>Year 9</option>
+              <option>Year 10</option>
+              <option>Year 11</option>
+              <option>Sixth Form</option>
+            </select>
             <button class="btn btn-primary" id="addClassButton">Add class</button>
           </div>
           <div class="classes-list" id="classesList"></div>
           <div class="status-line" id="classesStatus">No classes yet.</div>
         </div>
 
+        <!-- SEATING PANEL -->
+        <div class="panel" id="seatingPanel" style="display:none;">
+          <h3>Seating plan</h3>
+          <div class="panel-subtitle">
+            Select a class, then assign students to seats. Layout is saved per class.
+          </div>
+          <div class="input-row">
+            <select id="seatingClassSelect">
+              <option value="">Select class for seating</option>
+            </select>
+            <button class="btn btn-secondary" id="resetSeatingButton">Clear seating layout</button>
+          </div>
+          <div class="seating-grid" id="seatingGrid"></div>
+          <div class="status-line" id="seatingStatus">Choose a class to manage seating.</div>
+        </div>
+
+        <!-- BEHAVIOUR PANEL -->
         <div class="panel" id="behaviourPanel" style="display:none;">
           <h3>Behaviour – Live C1 / C2 / C3 / C4</h3>
           <div class="panel-subtitle">
-            Track live behaviour events. Counts are stored per user in Firestore.
+            Track live behaviour events. Counts and logs are stored per user in Firestore.
           </div>
+          <div class="input-row">
+            <select id="behaviourClassSelect">
+              <option value="">Class (optional for context)</option>
+            </select>
+            <select id="behaviourStudentSelect">
+              <option value="">Student (optional)</option>
+            </select>
+            <select id="behaviourStageSelect">
+              <option value="">Stage (C1–C4)</option>
+              <option value="c1">C1 – Warning</option>
+              <option value="c2">C2 – Continued</option>
+              <option value="c3">C3 – Removal (On‑Call)</option>
+              <option value="c4">C4 – Serious / SLT</option>
+            </select>
+            <button class="btn btn-secondary" id="logBehaviourEventButton">Log behaviour event</button>
+          </div>
+
           <div class="behaviour-grid">
             <div class="beh-card">
               <div class="beh-header">
@@ -433,7 +575,7 @@
             </div>
             <div class="beh-card">
               <div class="beh-header">
-                <span class="beh-label">C3 – Removal</span>
+                <span class="beh-label">C3 – Removal / On‑Call</span>
                 <span class="beh-count" id="c3Count">0</span>
               </div>
               <div class="beh-buttons">
@@ -443,7 +585,7 @@
             </div>
             <div class="beh-card">
               <div class="beh-header">
-                <span class="beh-label">C4 – Serious</span>
+                <span class="beh-label">C4 – Serious / SLT</span>
                 <span class="beh-count" id="c4Count">0</span>
               </div>
               <div class="beh-buttons">
@@ -452,13 +594,53 @@
               </div>
             </div>
           </div>
-          <div class="status-line" id="behaviourStatus">Behaviour counters are linked to your account.</div>
+          <div class="status-line" id="behaviourStatus">Behaviour counters and logs are linked to your account.</div>
         </div>
-      </div>
 
-      <!-- Overlay that blocks interaction until role is chosen -->
-      <div class="disabled-overlay" id="roleBlocker">
-        <span>You must choose your role at the top before using v8cloud.</span>
+        <!-- STUDENTS PANEL -->
+        <div class="panel" id="studentsPanel" style="display:none;">
+          <h3>Students</h3>
+          <div class="panel-subtitle">
+            Add student profiles with notes and SEN flags. These can be linked to classes and behaviour.
+          </div>
+          <div class="input-row">
+            <input type="text" id="newStudentName" placeholder="Student name" />
+            <input type="text" id="newStudentId" placeholder="Student ID (optional)" />
+            <select id="newStudentSen">
+              <option value="">SEN status</option>
+              <option>None</option>
+              <option>SEN Support</option>
+              <option>EHCP</option>
+            </select>
+          </div>
+          <div class="input-row">
+            <textarea id="newStudentNotes" placeholder="Notes (behaviour, safeguarding, pastoral, etc.)"></textarea>
+            <button class="btn btn-primary" id="addStudentButton">Add student</button>
+          </div>
+          <div class="students-list" id="studentsList"></div>
+          <div class="status-line" id="studentsStatus">No students yet.</div>
+        </div>
+
+        <!-- EXPORT PANEL -->
+        <div class="panel" id="exportPanel" style="display:none;">
+          <h3>Export & Logs</h3>
+          <div class="panel-subtitle">
+            Generate a CSV of behaviour events for SLT, Heads of Year, On‑Call, etc.
+          </div>
+          <div class="input-row">
+            <button class="btn btn-secondary" id="generateCsvButton">Generate behaviour CSV</button>
+            <button class="btn btn-secondary" id="copyCsvButton">Copy CSV to clipboard</button>
+          </div>
+          <div class="export-area">
+            <div class="export-output" id="csvOutput">No CSV generated yet.</div>
+            <div class="status-line" id="exportStatus">CSV includes timestamp, class, student, stage, role.</div>
+          </div>
+        </div>
+
+        <!-- Overlay that blocks interaction until role is chosen -->
+        <div class="disabled-overlay" id="roleBlocker">
+          <span>You must choose your role at the top before using v8cloud.</span>
+        </div>
       </div>
     </div>
   </div>
@@ -470,9 +652,7 @@
       <p>
         Choose the role that best matches how you use behaviour and classes. You can still sign in with any account, but your role helps define context.
       </p>
-      <div class="role-list" id="roleList">
-        <!-- Roles will be injected by JS -->
-      </div>
+      <div class="role-list" id="roleList"></div>
       <div class="role-modal-footer">
         You cannot use the app until a role is selected. You can change it later from the top bar.
       </div>
@@ -480,8 +660,691 @@
   </div>
 
   <script>
-    // --- YOUR REAL FIREBASE CONFIG (CORRECT) ---
+    // --- YOUR REAL FIREBASE CONFIG ---
     const firebaseConfig = {
       apiKey: "AIzaSyBp0Yy1xR6u3DPVdqIeDYu9nzYFZej71pQ",
       authDomain: "classes-91da0.firebaseapp.com",
-      projectId: "classes-
+      projectId: "classes-91da0",
+      storageBucket: "classes-91da0.firebasestorage.app",
+      messagingSenderId: "595282169529",
+      appId: "1:595282169529:web:8e53f84303fe9613f29568",
+      measurementId: "G-029JSPE48Z"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // --- Roles ---
+    const roles = [
+      { title: "Class Teacher", desc: "Leads a class, sets expectations, tracks behaviour and learning." },
+      { title: "Head of Department", desc: "Manages whole subject area and standards." },
+      { title: "Subject Lead", desc: "Runs a department subject (e.g., Maths Lead)." },
+      { title: "Head of Year", desc: "Behaviour, attendance, wellbeing for a year group." },
+      { title: "Pastoral Manager", desc: "Supports behaviour & safeguarding." },
+      { title: "Behaviour Mentor", desc: "Works with students who struggle with behaviour." },
+      { title: "Safeguarding Officer", desc: "Handles concerns & protection." },
+      { title: "SLT – Principal / Headteacher", desc: "Runs the whole school." },
+      { title: "SLT – Deputy Headteacher", desc: "Behaviour, curriculum, safeguarding." },
+      { title: "SLT – Assistant Headteacher", desc: "Specific areas (e.g., behaviour)." },
+      { title: "SLT – Associate Assistant Headteacher", desc: "Supports SLT and whole‑school priorities." },
+      { title: "On‑Call Staff", desc: "Responds to C3/C4 removals and serious incidents." },
+    ];
+
+    const roleModal = document.getElementById("roleModal");
+    const roleBlocker = document.getElementById("roleBlocker");
+    const roleList = document.getElementById("roleList");
+    const roleSelectButton = document.getElementById("roleSelectButton");
+    const roleSelectLabel = document.getElementById("roleSelectLabel");
+    const roleSubtitleText = document.getElementById("roleSubtitleText");
+
+    let currentRole = null;
+    let currentUser = null;
+
+    let behaviourDocUnsub = null;
+    let classesDocUnsub = null;
+    let studentsDocUnsub = null;
+    let behaviourLogUnsub = null;
+    let seatingDocUnsub = null;
+
+    roles.forEach(role => {
+      const div = document.createElement("div");
+      div.className = "role-chip";
+      div.innerHTML = `
+        <div class="role-chip-title">${role.title}</div>
+        <div class="role-chip-desc">${role.desc}</div>
+      `;
+      div.addEventListener("click", () => {
+        setRole(role.title);
+      });
+      roleList.appendChild(div);
+    });
+
+    function setRole(roleTitle) {
+      currentRole = roleTitle;
+      roleSelectLabel.textContent = roleTitle;
+      roleSubtitleText.textContent = roleTitle;
+      roleModal.style.display = "none";
+      roleBlocker.style.display = "none";
+    }
+
+    roleSelectButton.addEventListener("click", () => {
+      roleModal.style.display = "flex";
+      roleBlocker.style.display = "flex";
+    });
+
+    // --- Navigation ---
+    const navButtons = document.querySelectorAll(".nav-button");
+    const panels = {
+      classesPanel: document.getElementById("classesPanel"),
+      seatingPanel: document.getElementById("seatingPanel"),
+      behaviourPanel: document.getElementById("behaviourPanel"),
+      studentsPanel: document.getElementById("studentsPanel"),
+      exportPanel: document.getElementById("exportPanel"),
+    };
+
+    navButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        navButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const target = btn.getAttribute("data-target");
+        Object.keys(panels).forEach(key => {
+          panels[key].style.display = key === target ? "block" : "none";
+        });
+      });
+    });
+
+    // --- Auth UI ---
+    const googleLoginButton = document.getElementById("googleLoginButton");
+    const emailLoginButton = document.getElementById("emailLoginButton");
+    const emailInputs = document.getElementById("emailInputs");
+    const emailField = document.getElementById("emailField");
+    const passwordField = document.getElementById("passwordField");
+    const emailDoLoginButton = document.getElementById("emailDoLoginButton");
+    const authStatus = document.getElementById("authStatus");
+    const userPill = document.getElementById("userPill");
+    const userEmailSpan = document.getElementById("userEmail");
+    const logoutButton = document.getElementById("logoutButton");
+
+    googleLoginButton.addEventListener("click", async () => {
+      try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        await auth.signInWithPopup(provider);
+      } catch (err) {
+        console.error(err);
+        authStatus.textContent = "Google login error: " + err.message;
+      }
+    });
+
+    emailLoginButton.addEventListener("click", () => {
+      emailInputs.style.display = emailInputs.style.display === "none" ? "flex" : "none";
+    });
+
+    emailDoLoginButton.addEventListener("click", async () => {
+      const email = emailField.value.trim();
+      const password = passwordField.value.trim();
+      if (!email || !password) {
+        authStatus.textContent = "Enter email and password.";
+        return;
+      }
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+      } catch (err) {
+        if (err.code === "auth/user-not-found") {
+          try {
+            await auth.createUserWithEmailAndPassword(email, password);
+          } catch (err2) {
+            authStatus.textContent = "Email register error: " + err2.message;
+            return;
+          }
+        } else {
+          authStatus.textContent = "Email login error: " + err.message;
+          return;
+        }
+      }
+    });
+
+    logoutButton.addEventListener("click", async () => {
+      await auth.signOut();
+    });
+
+    auth.onAuthStateChanged(user => {
+      currentUser = user;
+      if (user) {
+        userPill.style.display = "flex";
+        userEmailSpan.textContent = user.email || "Signed in";
+        authStatus.textContent = "Signed in as " + (user.email || "user");
+        attachDataListeners();
+      } else {
+        userPill.style.display = "none";
+        userEmailSpan.textContent = "";
+        authStatus.textContent = "Not signed in.";
+        detachDataListeners();
+        resetUIData();
+      }
+    });
+
+    // --- Behaviour counters + log ---
+    const c1CountSpan = document.getElementById("c1Count");
+    const c2CountSpan = document.getElementById("c2Count");
+    const c3CountSpan = document.getElementById("c3Count");
+    const c4CountSpan = document.getElementById("c4Count");
+    const behaviourStatus = document.getElementById("behaviourStatus");
+    const behaviourButtons = document.querySelectorAll(".beh-buttons button");
+    const behaviourClassSelect = document.getElementById("behaviourClassSelect");
+    const behaviourStudentSelect = document.getElementById("behaviourStudentSelect");
+    const behaviourStageSelect = document.getElementById("behaviourStageSelect");
+    const logBehaviourEventButton = document.getElementById("logBehaviourEventButton");
+
+    behaviourButtons.forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (!currentUser) {
+          behaviourStatus.textContent = "Sign in to track behaviour.";
+          return;
+        }
+        if (!currentRole) {
+          behaviourStatus.textContent = "Choose your role before logging behaviour.";
+          return;
+        }
+        const type = btn.getAttribute("data-type");
+        const isInc = btn.classList.contains("inc");
+        const delta = isInc ? 1 : -1;
+        await updateBehaviourCount(type, delta);
+      });
+    });
+
+    async function updateBehaviourCount(type, delta) {
+      const docRef = db.collection("behaviourCounters").doc(currentUser.uid);
+      await db.runTransaction(async (tx) => {
+        const snap = await tx.get(docRef);
+        const data = snap.exists ? snap.data() : {
+          c1: 0, c2: 0, c3: 0, c4: 0,
+          role: currentRole || null,
+        };
+        const key = type;
+        let newVal = (data[key] || 0) + delta;
+        if (newVal < 0) newVal = 0;
+        data[key] = newVal;
+        data.role = currentRole || data.role;
+        tx.set(docRef, data);
+      });
+      behaviourStatus.textContent = "Behaviour updated (" + type.toUpperCase() + ").";
+    }
+
+    logBehaviourEventButton.addEventListener("click", async () => {
+      if (!currentUser) {
+        behaviourStatus.textContent = "Sign in to log behaviour.";
+        return;
+      }
+      if (!currentRole) {
+        behaviourStatus.textContent = "Choose your role before logging behaviour.";
+        return;
+      }
+      const stage = behaviourStageSelect.value;
+      if (!stage) {
+        behaviourStatus.textContent = "Select a behaviour stage (C1–C4).";
+        return;
+      }
+      const cls = behaviourClassSelect.value || "";
+      const student = behaviourStudentSelect.value || "";
+      const now = new Date();
+      const docRef = db.collection("behaviourLogs").doc(currentUser.uid).collection("events").doc();
+      await docRef.set({
+        stage,
+        className: cls,
+        studentName: student,
+        role: currentRole,
+        timestamp: now.toISOString(),
+      });
+      behaviourStatus.textContent = "Behaviour event logged.";
+    });
+
+    function attachBehaviourListener() {
+      if (!currentUser) return;
+      const docRef = db.collection("behaviourCounters").doc(currentUser.uid);
+      behaviourDocUnsub = docRef.onSnapshot(snap => {
+        const data = snap.data() || { c1: 0, c2: 0, c3: 0, c4: 0 };
+        c1CountSpan.textContent = data.c1 || 0;
+        c2CountSpan.textContent = data.c2 || 0;
+        c3CountSpan.textContent = data.c3 || 0;
+        c4CountSpan.textContent = data.c4 || 0;
+      });
+    }
+
+    // --- Classes ---
+    const newClassName = document.getElementById("newClassName");
+    const newClassRoom = document.getElementById("newClassRoom");
+    const newClassYear = document.getElementById("newClassYear");
+    const addClassButton = document.getElementById("addClassButton");
+    const classesList = document.getElementById("classesList");
+    const classesStatus = document.getElementById("classesStatus");
+    const seatingClassSelect = document.getElementById("seatingClassSelect");
+
+    addClassButton.addEventListener("click", async () => {
+      if (!currentUser) {
+        classesStatus.textContent = "Sign in to save classes.";
+        return;
+      }
+      if (!currentRole) {
+        classesStatus.textContent = "Choose your role before managing classes.";
+        return;
+      }
+      const name = newClassName.value.trim();
+      const room = newClassRoom.value.trim();
+      const year = newClassYear.value.trim();
+      if (!name) {
+        classesStatus.textContent = "Enter a class name.";
+        return;
+      }
+      const docRef = db.collection("classes").doc(currentUser.uid);
+      await db.runTransaction(async (tx) => {
+        const snap = await tx.get(docRef);
+        const data = snap.exists ? snap.data() : { items: [], role: currentRole || null };
+        data.items.push({
+          id: Date.now(),
+          name,
+          room: room || "",
+          year: year || "",
+        });
+        data.role = currentRole || data.role;
+        tx.set(docRef, data);
+      });
+      newClassName.value = "";
+      newClassRoom.value = "";
+      newClassYear.value = "";
+      classesStatus.textContent = "Class added.";
+    });
+
+    function attachClassesListener() {
+      if (!currentUser) return;
+      const docRef = db.collection("classes").doc(currentUser.uid);
+      classesDocUnsub = docRef.onSnapshot(snap => {
+        const data = snap.data() || { items: [] };
+        renderClasses(data.items || []);
+      });
+    }
+
+    function renderClasses(items) {
+      classesList.innerHTML = "";
+      seatingClassSelect.innerHTML = '<option value="">Select class for seating</option>';
+      behaviourClassSelect.innerHTML = '<option value="">Class (optional for context)</option>';
+      if (!items.length) {
+        classesStatus.textContent = "No classes yet.";
+        return;
+      }
+      items.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "class-item";
+        div.innerHTML = `
+          <div>
+            <span>${item.name}</span><br/>
+            <small>${item.room || "No room set"}${item.year ? " • " + item.year : ""}</small>
+          </div>
+          <div>
+            <button class="btn btn-secondary" data-id="${item.id}" data-action="select">Use</button>
+            <button class="btn btn-danger" data-id="${item.id}" data-action="remove">Remove</button>
+          </div>
+        `;
+        const buttons = div.querySelectorAll("button");
+        buttons.forEach(b => {
+          const id = Number(b.getAttribute("data-id"));
+          const action = b.getAttribute("data-action");
+          if (action === "remove") {
+            b.addEventListener("click", async () => {
+              await removeClass(id);
+            });
+          } else {
+            b.addEventListener("click", () => {
+              seatingClassSelect.value = item.name;
+              behaviourClassSelect.value = item.name;
+              classesStatus.textContent = "Selected class: " + item.name;
+            });
+          }
+        });
+        classesList.appendChild(div);
+
+        const opt1 = document.createElement("option");
+        opt1.value = item.name;
+        opt1.textContent = item.name;
+        seatingClassSelect.appendChild(opt1);
+
+        const opt2 = document.createElement("option");
+        opt2.value = item.name;
+        opt2.textContent = item.name;
+        behaviourClassSelect.appendChild(opt2);
+      });
+      classesStatus.textContent = "Classes loaded.";
+    }
+
+    async function removeClass(id) {
+      if (!currentUser) return;
+      const docRef = db.collection("classes").doc(currentUser.uid);
+      await db.runTransaction(async (tx) => {
+        const snap = await tx.get(docRef);
+        const data = snap.exists ? snap.data() : { items: [] };
+        data.items = (data.items || []).filter(item => item.id !== id);
+        tx.set(docRef, data);
+      });
+      classesStatus.textContent = "Class removed.";
+    }
+
+    // --- Students ---
+    const newStudentName = document.getElementById("newStudentName");
+    const newStudentId = document.getElementById("newStudentId");
+    const newStudentSen = document.getElementById("newStudentSen");
+    const newStudentNotes = document.getElementById("newStudentNotes");
+    const addStudentButton = document.getElementById("addStudentButton");
+    const studentsList = document.getElementById("studentsList");
+    const studentsStatus = document.getElementById("studentsStatus");
+
+    addStudentButton.addEventListener("click", async () => {
+      if (!currentUser) {
+        studentsStatus.textContent = "Sign in to save students.";
+        return;
+      }
+      if (!currentRole) {
+        studentsStatus.textContent = "Choose your role before managing students.";
+        return;
+      }
+      const name = newStudentName.value.trim();
+      const sid = newStudentId.value.trim();
+      const sen = newStudentSen.value.trim();
+      const notes = newStudentNotes.value.trim();
+      if (!name) {
+        studentsStatus.textContent = "Enter a student name.";
+        return;
+      }
+      const docRef = db.collection("students").doc(currentUser.uid);
+      await db.runTransaction(async (tx) => {
+        const snap = await tx.get(docRef);
+        const data = snap.exists ? snap.data() : { items: [], role: currentRole || null };
+        data.items.push({
+          id: Date.now(),
+          name,
+          sid: sid || "",
+          sen: sen || "",
+          notes: notes || "",
+        });
+        data.role = currentRole || data.role;
+        tx.set(docRef, data);
+      });
+      newStudentName.value = "";
+      newStudentId.value = "";
+      newStudentSen.value = "";
+      newStudentNotes.value = "";
+      studentsStatus.textContent = "Student added.";
+    });
+
+    function attachStudentsListener() {
+      if (!currentUser) return;
+      const docRef = db.collection("students").doc(currentUser.uid);
+      studentsDocUnsub = docRef.onSnapshot(snap => {
+        const data = snap.data() || { items: [] };
+        renderStudents(data.items || []);
+      });
+    }
+
+    function renderStudents(items) {
+      studentsList.innerHTML = "";
+      behaviourStudentSelect.innerHTML = '<option value="">Student (optional)</option>';
+      if (!items.length) {
+        studentsStatus.textContent = "No students yet.";
+        return;
+      }
+      items.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "student-item";
+        div.innerHTML = `
+          <div class="student-main">
+            <span>${item.name}</span>
+            <small>${item.sid || "No ID"}${item.sen ? " • " + item.sen : ""}</small>
+            <small>${item.notes || ""}</small>
+          </div>
+          <div class="student-actions">
+            <button class="btn btn-secondary" data-id="${item.id}" data-action="link">Use in behaviour</button>
+            <button class="btn btn-danger" data-id="${item.id}" data-action="remove">Remove</button>
+          </div>
+        `;
+        const buttons = div.querySelectorAll("button");
+        buttons.forEach(b => {
+          const id = Number(b.getAttribute("data-id"));
+          const action = b.getAttribute("data-action");
+          if (action === "remove") {
+            b.addEventListener("click", async () => {
+              await removeStudent(id);
+            });
+          } else {
+            b.addEventListener("click", () => {
+              behaviourStudentSelect.value = item.name;
+              studentsStatus.textContent = "Selected student: " + item.name;
+            });
+          }
+        });
+        studentsList.appendChild(div);
+
+        const opt = document.createElement("option");
+        opt.value = item.name;
+        opt.textContent = item.name;
+        behaviourStudentSelect.appendChild(opt);
+      });
+      studentsStatus.textContent = "Students loaded.";
+    }
+
+    async function removeStudent(id) {
+      if (!currentUser) return;
+      const docRef = db.collection("students").doc(currentUser.uid);
+      await db.runTransaction(async (tx) => {
+        const snap = await tx.get(docRef);
+        const data = snap.exists ? snap.data() : { items: [] };
+        data.items = (data.items || []).filter(item => item.id !== id);
+        tx.set(docRef, data);
+      });
+      studentsStatus.textContent = "Student removed.";
+    }
+
+    // --- Seating plan ---
+    const seatingGrid = document.getElementById("seatingGrid");
+    const seatingStatus = document.getElementById("seatingStatus");
+    const resetSeatingButton = document.getElementById("resetSeatingButton");
+
+    const SEAT_ROWS = 4;
+    const SEAT_COLS = 6;
+
+    function buildSeatingGrid() {
+      seatingGrid.innerHTML = "";
+      for (let r = 0; r < SEAT_ROWS; r++) {
+        for (let c = 0; c < SEAT_COLS; c++) {
+          const idx = r * SEAT_COLS + c;
+          const div = document.createElement("div");
+          div.className = "seat empty";
+          div.dataset.index = idx;
+          div.innerHTML = `
+            <span>Seat ${idx + 1}</span>
+            <small>Empty</small>
+          `;
+          div.addEventListener("click", () => {
+            assignSeat(idx);
+          });
+          seatingGrid.appendChild(div);
+        }
+      }
+    }
+
+    buildSeatingGrid();
+
+    seatingClassSelect.addEventListener("change", () => {
+      loadSeatingLayout();
+    });
+
+    resetSeatingButton.addEventListener("click", async () => {
+      if (!currentUser) {
+        seatingStatus.textContent = "Sign in to manage seating.";
+        return;
+      }
+      if (!currentRole) {
+        seatingStatus.textContent = "Choose your role before managing seating.";
+        return;
+      }
+      const cls = seatingClassSelect.value;
+      if (!cls) {
+        seatingStatus.textContent = "Select a class first.";
+        return;
+      }
+      const docRef = db.collection("seating").doc(currentUser.uid).collection("layouts").doc(cls);
+      await docRef.set({ seats: [], role: currentRole }, { merge: true });
+      seatingStatus.textContent = "Seating layout cleared.";
+      loadSeatingLayout();
+    });
+
+    async function assignSeat(index) {
+      if (!currentUser) {
+        seatingStatus.textContent = "Sign in to manage seating.";
+        return;
+      }
+      if (!currentRole) {
+        seatingStatus.textContent = "Choose your role before managing seating.";
+        return;
+      }
+      const cls = seatingClassSelect.value;
+      if (!cls) {
+        seatingStatus.textContent = "Select a class first.";
+        return;
+      }
+      const studentName = prompt("Enter student name for this seat:");
+      if (!studentName) return;
+      const docRef = db.collection("seating").doc(currentUser.uid).collection("layouts").doc(cls);
+      await db.runTransaction(async (tx) => {
+        const snap = await tx.get(docRef);
+        const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null };
+        const seats = data.seats || [];
+        const existingIndex = seats.findIndex(s => s.index === index);
+        if (existingIndex >= 0) {
+          seats[existingIndex].studentName = studentName;
+        } else {
+          seats.push({ index, studentName });
+        }
+        data.seats = seats;
+        data.role = currentRole || data.role;
+        tx.set(docRef, data);
+      });
+      seatingStatus.textContent = "Seat assigned.";
+      loadSeatingLayout();
+    }
+
+    function attachSeatingListener() {
+      if (!currentUser) return;
+      // seating layouts are per class; we reload on class change
+      // we don't keep a global listener here to avoid complexity
+    }
+
+    async function loadSeatingLayout() {
+      const cls = seatingClassSelect.value;
+      if (!currentUser || !cls) {
+        buildSeatingGrid();
+        seatingStatus.textContent = "Choose a class to manage seating.";
+        return;
+      }
+      buildSeatingGrid();
+      const docRef = db.collection("seating").doc(currentUser.uid).collection("layouts").doc(cls);
+      const snap = await docRef.get();
+      const data = snap.data();
+      if (!data || !data.seats || !data.seats.length) {
+        seatingStatus.textContent = "No seating layout yet for " + cls + ". Tap seats to assign.";
+        return;
+      }
+      const seats = data.seats;
+      seats.forEach(s => {
+        const div = seatingGrid.querySelector('[data-index="' + s.index + '"]');
+        if (div) {
+          div.classList.remove("empty");
+          div.innerHTML = `
+            <span>Seat ${s.index + 1}</span>
+            <small>${s.studentName}</small>
+          `;
+        }
+      });
+      seatingStatus.textContent = "Seating layout loaded for " + cls + ".";
+    }
+
+    // --- Export / CSV ---
+    const generateCsvButton = document.getElementById("generateCsvButton");
+    const copyCsvButton = document.getElementById("copyCsvButton");
+    const csvOutput = document.getElementById("csvOutput");
+    const exportStatus = document.getElementById("exportStatus");
+
+    generateCsvButton.addEventListener("click", async () => {
+      if (!currentUser) {
+        exportStatus.textContent = "Sign in to generate CSV.";
+        return;
+      }
+      const eventsRef = db.collection("behaviourLogs").doc(currentUser.uid).collection("events");
+      const snap = await eventsRef.orderBy("timestamp", "asc").get();
+      if (snap.empty) {
+        csvOutput.textContent = "No behaviour events logged.";
+        exportStatus.textContent = "No events to export.";
+        return;
+      }
+      const rows = [["timestamp", "class", "student", "stage", "role"]];
+      snap.forEach(doc => {
+        const d = doc.data();
+        rows.push([
+          d.timestamp || "",
+          d.className || "",
+          d.studentName || "",
+          d.stage || "",
+          d.role || "",
+        ]);
+      });
+      const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
+      csvOutput.textContent = csv;
+      exportStatus.textContent = "CSV generated.";
+    });
+
+    copyCsvButton.addEventListener("click", async () => {
+      const text = csvOutput.textContent || "";
+      if (!text || text === "No behaviour events logged." || text === "No CSV generated yet.") {
+        exportStatus.textContent = "Generate CSV first.";
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(text);
+        exportStatus.textContent = "CSV copied to clipboard.";
+      } catch (err) {
+        exportStatus.textContent = "Could not copy CSV: " + err.message;
+      }
+    });
+
+    // --- Attach / detach listeners ---
+    function attachDataListeners() {
+      detachDataListeners();
+      attachBehaviourListener();
+      attachClassesListener();
+      attachStudentsListener();
+      attachSeatingListener();
+    }
+
+    function detachDataListeners() {
+      if (behaviourDocUnsub) { behaviourDocUnsub(); behaviourDocUnsub = null; }
+      if (classesDocUnsub) { classesDocUnsub(); classesDocUnsub = null; }
+      if (studentsDocUnsub) { studentsDocUnsub(); studentsDocUnsub = null; }
+      if (behaviourLogUnsub) { behaviourLogUnsub(); behaviourLogUnsub = null; }
+      if (seatingDocUnsub) { seatingDocUnsub(); seatingDocUnsub = null; }
+    }
+
+    function resetUIData() {
+      c1CountSpan.textContent = "0";
+      c2CountSpan.textContent = "0";
+      c3CountSpan.textContent = "0";
+      c4CountSpan.textContent = "0";
+      classesList.innerHTML = "";
+      classesStatus.textContent = "No classes yet.";
+      studentsList.innerHTML = "";
+      studentsStatus.textContent = "No students yet.";
+      csvOutput.textContent = "No CSV generated yet.";
+      exportStatus.textContent = "CSV includes timestamp, class, student, stage, role.";
+      buildSeatingGrid();
+      seatingStatus.textContent = "Choose a class to manage seating.";
+    }
+  </script>
+</body>
+</html>
