@@ -334,10 +334,6 @@
       color: #9ca3af;
       font-size: 0.75rem;
     }
-    .student-flags {
-      font-size: 0.75rem;
-      color: #f97316;
-    }
     .student-actions {
       display: flex;
       flex-direction: column;
@@ -688,7 +684,7 @@
       { title: "SLT – Deputy Headteacher", desc: "Behaviour, curriculum, safeguarding." },
       { title: "SLT – Assistant Headteacher", desc: "Specific areas (e.g., behaviour)." },
       { title: "SLT – Associate Assistant Headteacher", desc: "Supports SLT and whole‑school priorities." },
-      { title: "On‑Call Staff", desc: "Responds to C3/C4 removals and serious incidents." },
+      { title: "On‑Call Staff", desc: "Responds to C3/C4 removals and serious incidents." }
     ];
 
     const roleModal = document.getElementById("roleModal");
@@ -704,8 +700,6 @@
     let behaviourDocUnsub = null;
     let classesDocUnsub = null;
     let studentsDocUnsub = null;
-    let behaviourLogUnsub = null;
-    let seatingDocUnsub = null;
 
     roles.forEach(role => {
       const div = document.createElement("div");
@@ -715,18 +709,14 @@
         <div class="role-chip-desc">${role.desc}</div>
       `;
       div.addEventListener("click", () => {
-        setRole(role.title);
+        currentRole = role.title;
+        roleSelectLabel.textContent = role.title;
+        roleSubtitleText.textContent = role.title;
+        roleModal.style.display = "none";
+        roleBlocker.style.display = "none";
       });
       roleList.appendChild(div);
     });
-
-    function setRole(roleTitle) {
-      currentRole = roleTitle;
-      roleSelectLabel.textContent = roleTitle;
-      roleSubtitleText.textContent = roleTitle;
-      roleModal.style.display = "none";
-      roleBlocker.style.display = "none";
-    }
 
     roleSelectButton.addEventListener("click", () => {
       roleModal.style.display = "flex";
@@ -1231,12 +1221,6 @@
       loadSeatingLayout();
     }
 
-    function attachSeatingListener() {
-      if (!currentUser) return;
-      // seating layouts are per class; we reload on class change
-      // we don't keep a global listener here to avoid complexity
-    }
-
     async function loadSeatingLayout() {
       const cls = seatingClassSelect.value;
       if (!currentUser || !cls) {
@@ -1320,15 +1304,12 @@
       attachBehaviourListener();
       attachClassesListener();
       attachStudentsListener();
-      attachSeatingListener();
     }
 
     function detachDataListeners() {
       if (behaviourDocUnsub) { behaviourDocUnsub(); behaviourDocUnsub = null; }
       if (classesDocUnsub) { classesDocUnsub(); classesDocUnsub = null; }
       if (studentsDocUnsub) { studentsDocUnsub(); studentsDocUnsub = null; }
-      if (behaviourLogUnsub) { behaviourLogUnsub(); behaviourLogUnsub = null; }
-      if (seatingDocUnsub) { seatingDocUnsub(); seatingDocUnsub = null; }
     }
 
     function resetUIData() {
