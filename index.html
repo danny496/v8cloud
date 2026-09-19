@@ -2,685 +2,809 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>v8 Cloud Edition - Classes</title>
+  <title>v8cloud – Classes & Behaviour</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Firebase v9+ CDN -->
+
+  <!-- Firebase v9 compat CDN -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #0f172a;
       color: #e5e7eb;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
     }
-    .app-container {
+    .app-shell {
       width: 100%;
-      max-width: 1100px;
+      max-width: 1200px;
       background: #020617;
       border-radius: 16px;
+      border: 1px solid #1f2937;
       box-shadow: 0 20px 40px rgba(0,0,0,0.6);
       overflow: hidden;
       display: flex;
-      flex-direction: row;
-      border: 1px solid #1f2937;
+      flex-direction: column;
     }
-    .left-panel {
-      flex: 1;
-      padding: 24px;
-      border-right: 1px solid #1f2937;
-      background: radial-gradient(circle at top left, #1d4ed8 0, #020617 45%);
-    }
-    .right-panel {
-      flex: 2;
-      padding: 24px;
-    }
-    h1, h2, h3 {
-      margin: 0 0 12px;
-    }
-    .muted {
-      color: #9ca3af;
-      font-size: 0.9rem;
-    }
-    .badge {
-      display: inline-flex;
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 8px;
+      padding: 12px 20px;
+      border-bottom: 1px solid #1f2937;
+      background: #020617;
+    }
+    .top-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .top-bar h1 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+    .subtitle {
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .role-select {
       padding: 6px 10px;
       border-radius: 999px;
-      background: rgba(15,23,42,0.8);
-      border: 1px solid rgba(148,163,184,0.4);
+      border: 1px solid #4b5563;
+      background: #0b1120;
+      color: #e5e7eb;
       font-size: 0.8rem;
-      margin-bottom: 12px;
+      cursor: pointer;
     }
-    .badge-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: #22c55e;
-    }
-    .pill {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(30,64,175,0.4);
-      border: 1px solid rgba(59,130,246,0.7);
-      font-size: 0.75rem;
-      margin-right: 6px;
-    }
-    .section-title {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #6b7280;
-      margin-top: 16px;
-      margin-bottom: 6px;
-    }
-    .input-group {
-      margin-bottom: 12px;
-    }
-    .input-group label {
-      display: block;
-      font-size: 0.8rem;
-      margin-bottom: 4px;
+    .role-select span {
       color: #9ca3af;
     }
-    .input-group input {
+    .user-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #111827;
+      border: 1px solid #374151;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .user-pill button {
+      border: none;
+      background: #ef4444;
+      color: white;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+    .main-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 520px;
+    }
+    .sidebar {
+      border-right: 1px solid #1f2937;
+      background: #020617;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .sidebar h2 {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #9ca3af;
+    }
+    .nav-button {
       width: 100%;
+      text-align: left;
       padding: 8px 10px;
       border-radius: 8px;
       border: 1px solid #1f2937;
-      background: #020617;
+      background: #0b1120;
       color: #e5e7eb;
-      font-size: 0.9rem;
-      outline: none;
+      font-size: 0.85rem;
+      cursor: pointer;
     }
-    .input-group input:focus {
+    .nav-button.active {
       border-color: #3b82f6;
-      box-shadow: 0 0 0 1px rgba(59,130,246,0.6);
+      background: #1d283a;
     }
-    .btn-row {
+    .content {
+      padding: 16px 20px;
       display: flex;
-      gap: 8px;
-      margin-top: 8px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 16px;
     }
-    button {
-      border: none;
+    .panel {
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      padding: 14px 16px;
+    }
+    .panel h3 {
+      margin: 0 0 8px 0;
+      font-size: 0.95rem;
+    }
+    .panel-subtitle {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-bottom: 10px;
+    }
+    .login-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .btn {
       border-radius: 999px;
+      border: 1px solid #374151;
+      background: #111827;
+      color: #e5e7eb;
       padding: 8px 14px;
       font-size: 0.85rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: #1f2937;
-      color: #e5e7eb;
     }
-    button.primary {
-      background: linear-gradient(135deg, #3b82f6, #22c55e);
-      color: #0b1120;
-      font-weight: 600;
+    .btn-primary {
+      border-color: #3b82f6;
+      background: #1d4ed8;
     }
-    button.google {
-      background: #f9fafb;
-      color: #111827;
-    }
-    button.google span.g {
-      font-weight: 700;
-      color: #2563eb;
-    }
-    button.danger {
+    .btn-danger {
+      border-color: #ef4444;
       background: #b91c1c;
     }
-    button:disabled {
+    .btn:disabled {
       opacity: 0.5;
-      cursor: default;
+      cursor: not-allowed;
     }
-    .small-link {
-      font-size: 0.8rem;
-      color: #60a5fa;
-      cursor: pointer;
-      text-decoration: underline;
-    }
-    .status {
+    .input-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
       margin-top: 8px;
-      font-size: 0.8rem;
-      color: #9ca3af;
     }
-    .status.error {
-      color: #f97373;
-    }
-    .status.success {
-      color: #4ade80;
-    }
-    .card {
-      border-radius: 12px;
-      border: 1px solid #1f2937;
+    .input-row input {
+      flex: 1;
+      min-width: 140px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid #374151;
       background: #020617;
-      padding: 12px;
-      margin-bottom: 12px;
+      color: #e5e7eb;
+      font-size: 0.8rem;
     }
-    .card-header {
+    .classes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .class-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
-    }
-    .card-header h3 {
-      font-size: 0.95rem;
-      margin: 0;
-    }
-    .chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
-    }
-    .chip {
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: #0f172a;
-      border: 1px solid #1f2937;
-      font-size: 0.75rem;
-      color: #9ca3af;
-    }
-    .flex-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .flex-col {
-      flex: 1;
-      min-width: 220px;
-    }
-    .textarea {
-      width: 100%;
-      min-height: 80px;
+      padding: 8px 10px;
       border-radius: 8px;
       border: 1px solid #1f2937;
-      background: #020617;
+      background: #0b1120;
+      font-size: 0.85rem;
+    }
+    .class-item span {
       color: #e5e7eb;
-      padding: 8px 10px;
-      font-size: 0.9rem;
-      resize: vertical;
-      outline: none;
     }
-    .textarea:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 1px rgba(59,130,246,0.6);
+    .class-item small {
+      color: #9ca3af;
+      font-size: 0.75rem;
     }
-    .top-bar {
+    .behaviour-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .beh-card {
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      background: #0b1120;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.85rem;
+    }
+    .beh-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
     }
-    .user-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: #0f172a;
-      border: 1px solid #1f2937;
-      font-size: 0.8rem;
-    }
-    .user-pill span.avatar {
-      width: 22px;
-      height: 22px;
-      border-radius: 999px;
-      background: #1d4ed8;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      color: #e5e7eb;
+    .beh-label {
       font-weight: 600;
     }
-    .hidden {
-      display: none !important;
+    .beh-count {
+      font-size: 1.1rem;
+    }
+    .beh-buttons {
+      display: flex;
+      gap: 6px;
+    }
+    .beh-buttons button {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #111827;
+      color: #e5e7eb;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .beh-buttons button.inc {
+      border-color: #f97316;
+      background: #ea580c;
+    }
+    .beh-buttons button.dec {
+      border-color: #6b7280;
+      background: #374151;
+    }
+    .status-line {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-top: 6px;
+    }
+    .role-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+    }
+    .role-modal {
+      width: 100%;
+      max-width: 640px;
+      background: #020617;
+      border-radius: 16px;
+      border: 1px solid #1f2937;
+      padding: 18px 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+    }
+    .role-modal h2 {
+      margin: 0 0 6px 0;
+      font-size: 1rem;
+    }
+    .role-modal p {
+      margin: 0 0 10px 0;
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
+    .role-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+    .role-chip {
+      border-radius: 10px;
+      border: 1px solid #374151;
+      background: #0b1120;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .role-chip:hover {
+      border-color: #3b82f6;
+      background: #1d283a;
+    }
+    .role-chip-title {
+      font-weight: 600;
+    }
+    .role-chip-desc {
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+    .role-modal-footer {
+      margin-top: 10px;
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+    .disabled-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15,23,42,0.75);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      z-index: 40;
+    }
+    .disabled-overlay span {
+      background: #020617;
+      border-radius: 999px;
+      border: 1px solid #f97316;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      color: #f97316;
     }
   </style>
 </head>
 <body>
-  <div class="app-container">
-    <!-- LEFT PANEL: Branding / Info -->
-    <div class="left-panel">
-      <div class="badge">
-        <div class="badge-dot"></div>
-        v8 Cloud Edition · Firestore
+  <div class="app-shell">
+    <div class="top-bar">
+      <div class="top-left">
+        <h1>v8cloud – Classes & Behaviour</h1>
+        <div class="subtitle" id="roleSubtitle">Role: <span id="roleSubtitleText">Not selected</span></div>
       </div>
-      <h1>Class Behaviour Cloud</h1>
-      <p class="muted">
-        Login first, then every class, student, and behaviour update is saved to the cloud
-        under your account automatically.
-      </p>
-      <div class="section-title">Features</div>
-      <div class="chip-row">
-        <div class="chip">Google login</div>
-        <div class="chip">Email + password</div>
-        <div class="chip">Firestore cloud save</div>
-        <div class="chip">Per‑user classes</div>
-        <div class="chip">Auto‑save</div>
-        <div class="chip">GitHub Pages ready</div>
+      <div class="top-right">
+        <button class="role-select" id="roleSelectButton">
+          <span>Role:</span> <strong id="roleSelectLabel">Tap to choose</strong>
+        </button>
+        <div class="user-pill" id="userPill" style="display:none;">
+          <span id="userEmail"></span>
+          <button id="logoutButton">Sign out</button>
+        </div>
       </div>
-      <div class="section-title">Status</div>
-      <p id="firebase-status" class="muted">Initializing Firebase…</p>
-      <p id="auth-status" class="muted">Not logged in.</p>
     </div>
 
-    <!-- RIGHT PANEL: Login + App -->
-    <div class="right-panel">
-      <!-- LOGIN SCREEN -->
-      <div id="login-screen">
-        <div class="top-bar">
-          <h2>Sign in to your classes</h2>
-          <span class="pill">Login required before using the app</span>
-        </div>
+    <div class="main-layout">
+      <div class="sidebar">
+        <h2>Navigation</h2>
+        <button class="nav-button active" data-target="classesPanel">Classes</button>
+        <button class="nav-button" data-target="behaviourPanel">Behaviour</button>
 
-        <div class="card">
-          <div class="card-header">
-            <h3>Email login</h3>
-            <span class="muted">Use school or personal email</span>
+        <div class="panel" style="margin-top:12px;">
+          <h3>Authentication</h3>
+          <div class="panel-subtitle">Sign in to link data to your account.</div>
+          <div class="login-buttons">
+            <button class="btn btn-primary" id="googleLoginButton">Continue with Google</button>
+            <button class="btn" id="emailLoginButton">Sign in with email</button>
           </div>
-          <div class="input-group">
-            <label for="email-input">Email</label>
-            <input id="email-input" type="email" placeholder="you@example.com" />
+          <div class="input-row" id="emailInputs" style="display:none;">
+            <input type="email" id="emailField" placeholder="Email address" />
+            <input type="password" id="passwordField" placeholder="Password" />
+            <button class="btn btn-primary" id="emailDoLoginButton">Login / Register</button>
           </div>
-          <div class="input-group">
-            <label for="password-input">Password</label>
-            <input id="password-input" type="password" placeholder="••••••••" />
-          </div>
-          <div class="btn-row">
-            <button id="btn-email-login" class="primary">Login with email</button>
-            <button id="btn-email-signup">Create account</button>
-            <button id="btn-reset-password">Reset password</button>
-          </div>
-          <p id="email-status" class="status"></p>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <h3>Google login</h3>
-            <span class="muted">Fast login with Google account</span>
-          </div>
-          <div class="btn-row">
-            <button id="btn-google-login" class="google">
-              <span class="g">G</span> Continue with Google
-            </button>
-          </div>
-          <p id="google-status" class="status"></p>
+          <div class="status-line" id="authStatus">Not signed in.</div>
         </div>
       </div>
 
-      <!-- MAIN APP SCREEN -->
-      <div id="app-screen" class="hidden">
-        <div class="top-bar">
-          <div>
-            <h2>Your classes</h2>
-            <p class="muted">All data is stored per user in Firestore.</p>
+      <div class="content" id="contentArea">
+        <div class="panel" id="classesPanel">
+          <h3>Classes</h3>
+          <div class="panel-subtitle">
+            Simple class list stored per user. You can expand this later into full seating plans.
           </div>
-          <div class="flex-row" style="align-items:center; gap:8px;">
-            <div id="user-pill" class="user-pill hidden">
-              <span class="avatar" id="user-avatar">U</span>
-              <span id="user-email">user@example.com</span>
-            </div>
-            <button id="btn-logout" class="danger">Logout</button>
+          <div class="input-row">
+            <input type="text" id="newClassName" placeholder="Class name (e.g., 9A Maths)" />
+            <input type="text" id="newClassRoom" placeholder="Room (e.g., B12)" />
+            <button class="btn btn-primary" id="addClassButton">Add class</button>
           </div>
+          <div class="classes-list" id="classesList"></div>
+          <div class="status-line" id="classesStatus">No classes yet.</div>
         </div>
 
-        <div class="card">
-          <div class="card-header">
-            <h3>Class list</h3>
-            <span class="muted">Simple example structure you can expand.</span>
+        <div class="panel" id="behaviourPanel" style="display:none;">
+          <h3>Behaviour – Live C1 / C2 / C3 / C4</h3>
+          <div class="panel-subtitle">
+            Track live behaviour events. Counts are stored per user in Firestore.
           </div>
-          <div class="flex-row">
-            <div class="flex-col">
-              <div class="input-group">
-                <label for="class-name-input">Class name</label>
-                <input id="class-name-input" type="text" placeholder="9A English" />
+          <div class="behaviour-grid">
+            <div class="beh-card">
+              <div class="beh-header">
+                <span class="beh-label">C1 – Warning</span>
+                <span class="beh-count" id="c1Count">0</span>
               </div>
-              <div class="input-group">
-                <label for="class-room-input">Room</label>
-                <input id="class-room-input" type="text" placeholder="Room 12" />
+              <div class="beh-buttons">
+                <button class="inc" data-type="c1">+1 C1</button>
+                <button class="dec" data-type="c1">-1</button>
               </div>
-              <div class="input-group">
-                <label for="class-notes-input">Notes / behaviour focus</label>
-                <textarea id="class-notes-input" class="textarea" placeholder="e.g. focus on low‑level disruption, uniform, punctuality."></textarea>
-              </div>
-              <div class="btn-row">
-                <button id="btn-add-class" class="primary">Add / update class</button>
-                <button id="btn-save-cloud">Save all to cloud</button>
-                <button id="btn-load-cloud">Load from cloud</button>
-              </div>
-              <p id="cloud-status" class="status"></p>
             </div>
-            <div class="flex-col">
-              <div class="section-title">Current classes (local view)</div>
-              <ul id="class-list" style="list-style:none; padding-left:0; font-size:0.9rem; max-height:220px; overflow:auto;"></ul>
+            <div class="beh-card">
+              <div class="beh-header">
+                <span class="beh-label">C2 – Continued</span>
+                <span class="beh-count" id="c2Count">0</span>
+              </div>
+              <div class="beh-buttons">
+                <button class="inc" data-type="c2">+1 C2</button>
+                <button class="dec" data-type="c2">-1</button>
+              </div>
+            </div>
+            <div class="beh-card">
+              <div class="beh-header">
+                <span class="beh-label">C3 – Removal</span>
+                <span class="beh-count" id="c3Count">0</span>
+              </div>
+              <div class="beh-buttons">
+                <button class="inc" data-type="c3">+1 C3</button>
+                <button class="dec" data-type="c3">-1</button>
+              </div>
+            </div>
+            <div class="beh-card">
+              <div class="beh-header">
+                <span class="beh-label">C4 – Serious</span>
+                <span class="beh-count" id="c4Count">0</span>
+              </div>
+              <div class="beh-buttons">
+                <button class="inc" data-type="c4">+1 C4</button>
+                <button class="dec" data-type="c4">-1</button>
+              </div>
             </div>
           </div>
+          <div class="status-line" id="behaviourStatus">Behaviour counters are linked to your account.</div>
         </div>
+      </div>
 
-        <div class="card">
-          <div class="card-header">
-            <h3>Example behaviour data model</h3>
-            <span class="muted">This is stored under each class in Firestore.</span>
-          </div>
-          <pre style="font-size:0.75rem; background:#020617; padding:8px; border-radius:8px; border:1px solid #1f2937; overflow:auto;">
-{
-  "classes": {
-    "9A English": {
-      "room": "12",
-      "notes": "Low‑level disruption, uniform, punctuality.",
-      "students": {
-        "Alice": {
-          "points": 4,
-          "uniform": true,
-          "toiletPasses": 1,
-          "sen": false,
-          "detentions": 0
-        },
-        "Ben": {
-          "points": -2,
-          "uniform": false,
-          "toiletPasses": 0,
-          "sen": true,
-          "detentions": 1
-        }
-      }
-    }
-  }
-}
-          </pre>
-        </div>
+      <!-- Overlay that blocks interaction until role is chosen -->
+      <div class="disabled-overlay" id="roleBlocker">
+        <span>You must choose your role at the top before using v8cloud.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Role selection modal -->
+  <div class="role-modal-backdrop" id="roleModal">
+    <div class="role-modal">
+      <h2>Select your role</h2>
+      <p>
+        Choose the role that best matches how you use behaviour and classes. You can still sign in with any account, but your role helps define context.
+      </p>
+      <div class="role-list" id="roleList">
+        <!-- Roles will be injected by JS -->
+      </div>
+      <div class="role-modal-footer">
+        You cannot use the app until a role is selected. You can change it later from the top bar.
       </div>
     </div>
   </div>
 
   <script>
-    // --- Firebase config (YOUR REAL CONFIG) ---
+    // --- Firebase config (use your existing project) ---
     const firebaseConfig = {
-      apiKey: "AIzaSyBp0Yy1xR6u3DPVdqIeDYu9nzYFZej71pQ",
+      apiKey: "AIzaSyBvH5cJpZbXbVtGfZp7Jp9Zp9Zp9Zp9Zp9Z", // REPLACE with your real key
       authDomain: "classes-91da0.firebaseapp.com",
       projectId: "classes-91da0",
-      storageBucket: "classes-91da0.firebasestorage.app",
-      messagingSenderId: "59528169529",
-      appId: "1:59528169529:web:8e53f84303fe9613f29568",
-      measurementId: "G-029JSPE48Z"
+      storageBucket: "classes-91da0.appspot.com",
+      messagingSenderId: "595282169529",
+      appId: "1:595282169529:web:exampleappid", // REPLACE with your real appId
     };
 
-    // --- Initialize Firebase ---
-    let app, auth, db;
-    try {
-      app = firebase.initializeApp(firebaseConfig);
-      auth = firebase.auth();
-      db = firebase.firestore();
-      document.getElementById("firebase-status").textContent =
-        "Firebase connected to project: classes-91da0";
-      document.getElementById("firebase-status").classList.add("success");
-    } catch (err) {
-      console.error(err);
-      document.getElementById("firebase-status").textContent =
-        "Error initializing Firebase: " + err.message;
-      document.getElementById("firebase-status").classList.add("error");
-    }
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    // --- UI helpers ---
-    const loginScreen = document.getElementById("login-screen");
-    const appScreen = document.getElementById("app-screen");
-    const authStatus = document.getElementById("auth-status");
-    const emailStatus = document.getElementById("email-status");
-    const googleStatus = document.getElementById("google-status");
-    const cloudStatus = document.getElementById("cloud-status");
-    const userPill = document.getElementById("user-pill");
-    const userEmailSpan = document.getElementById("user-email");
-    const userAvatarSpan = document.getElementById("user-avatar");
-    const classListEl = document.getElementById("class-list");
+    // --- Role data ---
+    const roles = [
+      { title: "Class Teacher", desc: "Leads a class, sets expectations, tracks behaviour and learning." },
+      { title: "Head of Department", desc: "Manages whole subject area and standards." },
+      { title: "Subject Lead", desc: "Runs a department subject (e.g., Maths Lead)." },
+      { title: "Head of Year", desc: "Behaviour, attendance, wellbeing for a year group." },
+      { title: "Pastoral Manager", desc: "Supports behaviour & safeguarding." },
+      { title: "Behaviour Mentor", desc: "Works with students who struggle with behaviour." },
+      { title: "Safeguarding Officer", desc: "Handles concerns & protection." },
+      { title: "SLT – Principal / Headteacher", desc: "Runs the whole school." },
+      { title: "SLT – Deputy Headteacher", desc: "Behaviour, curriculum, safeguarding." },
+      { title: "SLT – Assistant Headteacher", desc: "Specific areas (e.g., behaviour)." },
+      { title: "SLT – Associate Assistant Headteacher", desc: "Supports SLT and whole‑school priorities." },
+      { title: "On‑Call Staff", desc: "Responds to C3/C4 removals and serious incidents." },
+    ];
 
-    let localClasses = {}; // simple in‑memory structure
+    const roleModal = document.getElementById("roleModal");
+    const roleBlocker = document.getElementById("roleBlocker");
+    const roleList = document.getElementById("roleList");
+    const roleSelectButton = document.getElementById("roleSelectButton");
+    const roleSelectLabel = document.getElementById("roleSelectLabel");
+    const roleSubtitleText = document.getElementById("roleSubtitleText");
 
-    function showLogin() {
-      loginScreen.classList.remove("hidden");
-      appScreen.classList.add("hidden");
-      authStatus.textContent = "Not logged in.";
-      userPill.classList.add("hidden");
-    }
+    let currentRole = null;
+    let currentUser = null;
+    let behaviourDocUnsub = null;
+    let classesDocUnsub = null;
 
-    function showApp(user) {
-      loginScreen.classList.add("hidden");
-      appScreen.classList.remove("hidden");
-      authStatus.textContent = "Logged in as " + (user.email || "Unknown");
-      authStatus.classList.add("success");
-      userPill.classList.remove("hidden");
-      userEmailSpan.textContent = user.email || "Unknown user";
-      const initial = (user.email || "?")[0].toUpperCase();
-      userAvatarSpan.textContent = initial;
-    }
-
-    function renderClassList() {
-      classListEl.innerHTML = "";
-      const keys = Object.keys(localClasses);
-      if (keys.length === 0) {
-        const li = document.createElement("li");
-        li.textContent = "No classes yet. Add one on the left.";
-        li.style.color = "#6b7280";
-        classListEl.appendChild(li);
-        return;
-      }
-      keys.forEach((name) => {
-        const c = localClasses[name];
-        const li = document.createElement("li");
-        li.style.padding = "4px 0";
-        li.innerHTML =
-          "<strong>" + name + "</strong> · Room " +
-          (c.room || "?") +
-          (c.notes ? " · " + c.notes : "");
-        classListEl.appendChild(li);
+    // Inject roles into modal
+    roles.forEach(role => {
+      const div = document.createElement("div");
+      div.className = "role-chip";
+      div.innerHTML = `
+        <div class="role-chip-title">${role.title}</div>
+        <div class="role-chip-desc">${role.desc}</div>
+      `;
+      div.addEventListener("click", () => {
+        setRole(role.title);
       });
+      roleList.appendChild(div);
+    });
+
+    function setRole(roleTitle) {
+      currentRole = roleTitle;
+      roleSelectLabel.textContent = roleTitle;
+      roleSubtitleText.textContent = roleTitle;
+      roleModal.style.display = "none";
+      roleBlocker.style.display = "none";
     }
 
-    // --- Auth state listener ---
-    if (auth) {
-      auth.onAuthStateChanged((user) => {
-        if (user) {
-          showApp(user);
-          // Auto‑load cloud data when user logs in
-          loadFromCloud(user);
+    // Allow changing role later
+    roleSelectButton.addEventListener("click", () => {
+      roleModal.style.display = "flex";
+      roleBlocker.style.display = "flex";
+    });
+
+    // --- Navigation ---
+    const navButtons = document.querySelectorAll(".nav-button");
+    const classesPanel = document.getElementById("classesPanel");
+    const behaviourPanel = document.getElementById("behaviourPanel");
+
+    navButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        navButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const target = btn.getAttribute("data-target");
+        if (target === "classesPanel") {
+          classesPanel.style.display = "block";
+          behaviourPanel.style.display = "none";
         } else {
-          showLogin();
+          classesPanel.style.display = "none";
+          behaviourPanel.style.display = "block";
         }
       });
-    }
+    });
 
-    // --- Email login / signup / reset ---
-    document.getElementById("btn-email-login").addEventListener("click", async () => {
-      const email = document.getElementById("email-input").value.trim();
-      const password = document.getElementById("password-input").value;
-      emailStatus.textContent = "";
-      emailStatus.className = "status";
+    // --- Auth UI ---
+    const googleLoginButton = document.getElementById("googleLoginButton");
+    const emailLoginButton = document.getElementById("emailLoginButton");
+    const emailInputs = document.getElementById("emailInputs");
+    const emailField = document.getElementById("emailField");
+    const passwordField = document.getElementById("passwordField");
+    const emailDoLoginButton = document.getElementById("emailDoLoginButton");
+    const authStatus = document.getElementById("authStatus");
+    const userPill = document.getElementById("userPill");
+    const userEmailSpan = document.getElementById("userEmail");
+    const logoutButton = document.getElementById("logoutButton");
+
+    googleLoginButton.addEventListener("click", async () => {
+      try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        await auth.signInWithPopup(provider);
+      } catch (err) {
+        console.error(err);
+        authStatus.textContent = "Google login error: " + err.message;
+      }
+    });
+
+    emailLoginButton.addEventListener("click", () => {
+      emailInputs.style.display = emailInputs.style.display === "none" ? "flex" : "none";
+    });
+
+    emailDoLoginButton.addEventListener("click", async () => {
+      const email = emailField.value.trim();
+      const password = passwordField.value.trim();
       if (!email || !password) {
-        emailStatus.textContent = "Enter email and password.";
-        emailStatus.classList.add("error");
+        authStatus.textContent = "Enter email and password.";
         return;
       }
       try {
         await auth.signInWithEmailAndPassword(email, password);
-        emailStatus.textContent = "Logged in successfully.";
-        emailStatus.classList.add("success");
       } catch (err) {
-        emailStatus.textContent = "Login error: " + err.message;
-        emailStatus.classList.add("error");
-      }
-    });
-
-    document.getElementById("btn-email-signup").addEventListener("click", async () => {
-      const email = document.getElementById("email-input").value.trim();
-      const password = document.getElementById("password-input").value;
-      emailStatus.textContent = "";
-      emailStatus.className = "status";
-      if (!email || !password) {
-        emailStatus.textContent = "Enter email and password.";
-        emailStatus.classList.add("error");
-        return;
-      }
-      try {
-        await auth.createUserWithEmailAndPassword(email, password);
-        emailStatus.textContent = "Account created and logged in.";
-        emailStatus.classList.add("success");
-      } catch (err) {
-        emailStatus.textContent = "Signup error: " + err.message;
-        emailStatus.classList.add("error");
-      }
-    });
-
-    document.getElementById("btn-reset-password").addEventListener("click", async () => {
-      const email = document.getElementById("email-input").value.trim();
-      emailStatus.textContent = "";
-      emailStatus.className = "status";
-      if (!email) {
-        emailStatus.textContent = "Enter your email to reset password.";
-        emailStatus.classList.add("error");
-        return;
-      }
-      try {
-        await auth.sendPasswordResetEmail(email);
-        emailStatus.textContent = "Password reset email sent.";
-        emailStatus.classList.add("success");
-      } catch (err) {
-        emailStatus.textContent = "Reset error: " + err.message;
-        emailStatus.classList.add("error");
-      }
-    });
-
-    // --- Google login ---
-    document.getElementById("btn-google-login").addEventListener("click", async () => {
-      googleStatus.textContent = "";
-      googleStatus.className = "status";
-      const provider = new firebase.auth.GoogleAuthProvider();
-      try {
-        await auth.signInWithPopup(provider);
-        googleStatus.textContent = "Logged in with Google.";
-        googleStatus.classList.add("success");
-      } catch (err) {
-        googleStatus.textContent = "Google login error: " + err.message;
-        googleStatus.classList.add("error");
-      }
-    });
-
-    // --- Logout ---
-    document.getElementById("btn-logout").addEventListener("click", async () => {
-      cloudStatus.textContent = "";
-      cloudStatus.className = "status";
-      try {
-        await auth.signOut();
-        cloudStatus.textContent = "Logged out.";
-        cloudStatus.classList.add("success");
-        localClasses = {};
-        renderClassList();
-      } catch (err) {
-        cloudStatus.textContent = "Logout error: " + err.message;
-        cloudStatus.classList.add("error");
-      }
-    });
-
-    // --- Local class handling ---
-    document.getElementById("btn-add-class").addEventListener("click", () => {
-      const name = document.getElementById("class-name-input").value.trim();
-      const room = document.getElementById("class-room-input").value.trim();
-      const notes = document.getElementById("class-notes-input").value.trim();
-      cloudStatus.textContent = "";
-      cloudStatus.className = "status";
-      if (!name) {
-        cloudStatus.textContent = "Enter a class name.";
-        cloudStatus.classList.add("error");
-        return;
-      }
-      localClasses[name] = {
-        room: room || "",
-        notes: notes || "",
-        students: {} // you can expand this later
-      };
-      renderClassList();
-      cloudStatus.textContent = "Class added/updated locally.";
-      cloudStatus.classList.add("success");
-    });
-
-    // --- Firestore: Save / Load ---
-    async function saveToCloud(user) {
-      if (!user) {
-        cloudStatus.textContent = "You must be logged in to save.";
-        cloudStatus.classList.add("error");
-        return;
-      }
-      cloudStatus.textContent = "Saving to cloud…";
-      cloudStatus.className = "status";
-      try {
-        const docRef = db.collection("users").doc(user.uid);
-        await docRef.set(
-          {
-            classes: localClasses,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-          },
-          { merge: true }
-        );
-        cloudStatus.textContent = "Saved to cloud.";
-        cloudStatus.classList.add("success");
-      } catch (err) {
-        console.error(err);
-        cloudStatus.textContent = "Save error: " + err.message;
-        cloudStatus.classList.add("error");
-      }
-    }
-
-    async function loadFromCloud(user) {
-      if (!user) {
-        cloudStatus.textContent = "You must be logged in to load.";
-        cloudStatus.classList.add("error");
-        return;
-      }
-      cloudStatus.textContent = "Loading from cloud…";
-      cloudStatus.className = "status";
-      try {
-        const docRef = db.collection("users").doc(user.uid);
-        const snap = await docRef.get();
-        if (snap.exists) {
-          const data = snap.data();
-          localClasses = data.classes || {};
-          renderClassList();
-          cloudStatus.textContent = "Loaded from cloud.";
-          cloudStatus.classList.add("success");
+        if (err.code === "auth/user-not-found") {
+          try {
+            await auth.createUserWithEmailAndPassword(email, password);
+          } catch (err2) {
+            authStatus.textContent = "Email register error: " + err2.message;
+            return;
+          }
         } else {
-          localClasses = {};
-          renderClassList();
-          cloudStatus.textContent = "No cloud data yet. Save to create it.";
-          cloudStatus.classList.add("success");
+          authStatus.textContent = "Email login error: " + err.message;
+          return;
         }
-      } catch (err) {
-        console.error(err);
-        cloudStatus.textContent = "Load error: " + err.message;
-        cloudStatus.classList.add("error");
+      }
+    });
+
+    logoutButton.addEventListener("click", async () => {
+      await auth.signOut();
+    });
+
+    auth.onAuthStateChanged(user => {
+      currentUser = user;
+      if (user) {
+        userPill.style.display = "flex";
+        userEmailSpan.textContent = user.email || "Signed in";
+        authStatus.textContent = "Signed in as " + (user.email || "user");
+        attachDataListeners();
+      } else {
+        userPill.style.display = "none";
+        userEmailSpan.textContent = "";
+        authStatus.textContent = "Not signed in.";
+        detachDataListeners();
+        resetUIData();
+      }
+    });
+
+    // --- Firestore: behaviour + classes ---
+    const c1CountSpan = document.getElementById("c1Count");
+    const c2CountSpan = document.getElementById("c2Count");
+    const c3CountSpan = document.getElementById("c3Count");
+    const c4CountSpan = document.getElementById("c4Count");
+    const behaviourStatus = document.getElementById("behaviourStatus");
+
+    const behaviourButtons = document.querySelectorAll(".beh-buttons button");
+
+    behaviourButtons.forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (!currentUser) {
+          behaviourStatus.textContent = "Sign in to track behaviour.";
+          return;
+        }
+        if (!currentRole) {
+          behaviourStatus.textContent = "Choose your role before logging behaviour.";
+          return;
+        }
+        const type = btn.getAttribute("data-type");
+        const isInc = btn.classList.contains("inc");
+        const delta = isInc ? 1 : -1;
+        await updateBehaviourCount(type, delta);
+      });
+    });
+
+    async function updateBehaviourCount(type, delta) {
+      const docRef = db.collection("behaviour").doc(currentUser.uid);
+      await db.runTransaction(async (tx) => {
+        const snap = await tx.get(docRef);
+        const data = snap.exists ? snap.data() : {
+          c1: 0, c2: 0, c3: 0, c4: 0,
+          role: currentRole || null,
+        };
+        const key = type;
+        let newVal = (data[key] || 0) + delta;
+        if (newVal < 0) newVal = 0;
+        data[key] = newVal;
+        data.role = currentRole || data.role;
+        tx.set(docRef, data);
+      });
+      behaviourStatus.textContent = "Behaviour updated (" + type.toUpperCase() + ").";
+    }
+
+    function attachBehaviourListener() {
+      if (!currentUser) return;
+      const docRef = db.collection("behaviour").doc(currentUser.uid);
+      behaviourDocUnsub = docRef.onSnapshot(snap => {
+        const data = snap.data() || { c1: 0, c2: 0, c3: 0, c4: 0 };
+        c1CountSpan.textContent = data.c1 || 0;
+        c2CountSpan.textContent = data.c2 || 0;
+        c3CountSpan.textContent = data.c3 || 0;
+        c4CountSpan.textContent = data.c4 || 0;
+      });
+    }
+
+    // Classes
+    const newClassName = document.getElementById("newClassName");
+    const newClassRoom = document.getElementById("newClassRoom");
+    const addClassButton = document.getElementById("addClassButton");
+    const classesList = document.getElementById("classesList");
+    const classesStatus = document.getElementById("classesStatus");
+
+    addClassButton.addEventListener("click", async () => {
+      if (!currentUser) {
+        classesStatus.textContent = "Sign in to save classes.";
+        return;
+      }
+      if (!currentRole) {
+        classesStatus.textContent = "Choose your role before managing classes.";
+        return;
+      }
+      const name = newClassName.value.trim();
+      const room = newClassRoom.value.trim();
+      if (!name) {
+        classesStatus.textContent = "Enter a class name.";
+        return;
+      }
+      const docRef = db.collection("classes").doc(currentUser.uid);
+      await db.runTransaction(async (tx) => {
+        const snap = await tx.get(docRef);
+        const data = snap.exists ? snap.data() : { items: [], role: currentRole || null };
+        data.items.push({
+          id: Date.now(),
+          name,
+          room: room || "",
+        });
+        data.role = currentRole || data.role;
+        tx.set(docRef, data);
+      });
+      newClassName.value = "";
+      newClassRoom.value = "";
+      classesStatus.textContent = "Class added.";
+    });
+
+    function attachClassesListener() {
+      if (!currentUser) return;
+      const docRef = db.collection("classes").doc(currentUser.uid);
+      classesDocUnsub = docRef.onSnapshot(snap => {
+        const data = snap.data() || { items: [] };
+        renderClasses(data.items || []);
+      });
+    }
+
+    function renderClasses(items) {
+      classesList.innerHTML = "";
+      if (!items.length) {
+        classesStatus.textContent = "No classes yet.";
+        return;
+      }
+      items.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "class-item";
+        div.innerHTML = `
+          <div>
+            <span>${item.name}</span><br/>
+            <small>${item.room || "No room set"}</small>
+          </div>
+          <button class="btn btn-danger" data-id="${item.id}">Remove</button>
+        `;
+        const btn = div.querySelector("button");
+        btn.addEventListener("click", async () => {
+          await removeClass(item.id);
+        });
+        classesList.appendChild(div);
+      });
+      classesStatus.textContent = "Classes loaded.";
+    }
+
+    async function removeClass(id) {
+      if (!currentUser) return;
+      const docRef = db.collection("classes").doc(currentUser.uid);
+      await db.runTransaction(async (tx) => {
+        const snap = await tx.get(docRef);
+        const data = snap.exists ? snap.data() : { items: [] };
+        data.items = (data.items || []).filter(item => item.id !== id);
+        tx.set(docRef, data);
+      });
+      classesStatus.textContent = "Class removed.";
+    }
+
+    function attachDataListeners() {
+      detachDataListeners();
+      attachBehaviourListener();
+      attachClassesListener();
+    }
+
+    function detachDataListeners() {
+      if (behaviourDocUnsub) {
+        behaviourDocUnsub();
+        behaviourDocUnsub = null;
+      }
+      if (classesDocUnsub) {
+        classesDocUnsub();
+        classesDocUnsub = null;
       }
     }
 
-    document.getElementById("btn-save-cloud").addEventListener("click", () => {
-      const user = auth.currentUser;
-      saveToCloud(user);
-    });
-
-    document.getElementById("btn-load-cloud").addEventListener("click", () => {
-      const user = auth.currentUser;
-      loadFromCloud(user);
-    });
-
-    // Initial render
-    renderClassList();
+    function resetUIData() {
+      c1CountSpan.textContent = "0";
+      c2CountSpan.textContent = "0";
+      c3CountSpan.textContent = "0";
+      c4CountSpan.textContent = "0";
+      classesList.innerHTML = "";
+      classesStatus.textContent = "No classes yet.";
+    }
   </script>
 </body>
 </html>
