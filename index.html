@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>v8cloud – Behaviour & Classes</title>
+  <title>v8cloud – Behaviour & Classes (v6 classes)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Firebase v9 compat -->
@@ -790,22 +790,6 @@
       await auth.signOut();
     });
 
-    auth.onAuthStateChanged(user => {
-      currentUser = user;
-      if (user) {
-        userPill.style.display = "flex";
-        userEmailSpan.textContent = user.email || "Signed in";
-        authStatus.textContent = "Signed in as " + (user.email || "user");
-        attachDataListeners();
-      } else {
-        userPill.style.display = "none";
-        userEmailSpan.textContent = "";
-        authStatus.textContent = "Not signed in.";
-        detachDataListeners();
-        resetUIData();
-      }
-    });
-
     const c1CountSpan = document.getElementById("c1Count");
     const c2CountSpan = document.getElementById("c2Count");
     const c3CountSpan = document.getElementById("c3Count");
@@ -818,8 +802,6 @@
     const logBehaviourEventButton = document.getElementById("logBehaviourEventButton");
 
     let behaviourCountersUnsub = null;
-    let classesUnsub = null;
-    let studentsUnsub = null;
 
     behaviourButtons.forEach(btn => {
       btn.addEventListener("click", async () => {
@@ -906,6 +888,7 @@
       });
     }
 
+    // --- CLASSES (v6 instant UI version) ---
     const newClassName = document.getElementById("newClassName");
     const newClassRoom = document.getElementById("newClassRoom");
     const newClassYear = document.getElementById("newClassYear");
@@ -914,83 +897,46 @@
     const classesStatus = document.getElementById("classesStatus");
     const seatingClassSelect = document.getElementById("seatingClassSelect");
 
-    addClassButton.addEventListener("click", async () => {
-      if (!currentUser) {
-        classesStatus.textContent = "Sign in to save classes.";
-        return;
-      }
-      if (!currentRole) {
-        classesStatus.textContent = "Choose your role before managing classes.";
-        return;
-      }
-      const name = newClassName.value.trim();
-      const room = newClassRoom.value.trim();
-      const year = newClassYear.value.trim();
-      if (!name) {
-        classesStatus.textContent = "Enter a class name.";
-        return;
-      }
-      try {
-        const colRef = db.collection("users").doc(currentUser.uid).collection("classes");
-        await colRef.add({
-          name,
-          room: room || "",
-          year: year || "",
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-        newClassName.value = "";
-        newClassRoom.value = "";
-        newClassYear.value = "";
-        classesStatus.textContent = "Class added.";
-      } catch (err) {
-        console.error(err);
-        classesStatus.textContent = "Add class error: " + err.message;
-      }
-    });
+    // local array like v6
+    let localClasses = [];
 
-    function attachClassesListener() {
-      if (!currentUser) return;
-      const colRef = db.collection("users").doc(currentUser.uid).collection("classes").orderBy("createdAt", "asc");
-      classesUnsub = colRef.onSnapshot(snap => {
-        const items = [];
-        snap.forEach(doc => {
-          items.push({ id: doc.id, ...doc.data() });
-        });
-        renderClasses(items);
-      }, err => {
-        console.error(err);
-        classesStatus.textContent = "Classes error: " + err.message;
-      });
-    }
-
-    function renderClasses(items) {
+    function renderClassesInstant() {
       classesList.innerHTML = "";
       seatingClassSelect.innerHTML = '<option value="">Select class for seating</option>';
       behaviourClassSelect.innerHTML = '<option value="">Class (optional for context)</option>';
-      if (!items.length) {
+
+      if (localClasses.length === 0) {
         classesStatus.textContent = "No classes yet.";
         return;
       }
-      items.forEach(item => {
+
+      localClasses.forEach(item => {
         const div = document.createElement("div");
         div.className = "class-item";
         div.innerHTML = `
           <div>
             <span>${item.name}</span><br/>
-            <small>${item.room || "No room set"}${item.year ? " • " + item.year : ""}</small>
+            <small>${item.room || "No room"}${item.year ? " • " + item.year : ""}</small>
           </div>
           <div>
             <button class="btn btn-secondary" data-id="${item.id}" data-action="select">Use</button>
             <button class="btn btn-danger" data-id="${item.id}" data-action="remove">Remove</button>
           </div>
         `;
+
         const buttons = div.querySelectorAll("button");
         buttons.forEach(b => {
           const id = b.getAttribute("data-id");
           const action = b.getAttribute("data-action");
+
           if (action === "remove") {
-            b.addEventListener("click", async () => {
-              await removeClass(id);
+            b.addEventListener("click", () => {
+              localClasses = localClasses.filter(c => c.id !== id);
+              renderClassesInstant();
+              if (currentUser) {
+                db.collection("users").doc(currentUser.uid)
+                  .collection("classes").doc(id).delete().catch(err => console.error("Delete error:", err));
+              }
             });
           } else {
             b.addEventListener("click", () => {
@@ -1000,6 +946,7 @@
             });
           }
         });
+
         classesList.appendChild(div);
 
         const opt1 = document.createElement("option");
@@ -1012,21 +959,63 @@
         opt2.textContent = item.name;
         behaviourClassSelect.appendChild(opt2);
       });
+
       classesStatus.textContent = "Classes loaded.";
     }
 
-    async function removeClass(id) {
-      if (!currentUser) return;
-      try {
-        const docRef = db.collection("users").doc(currentUser.uid).collection("classes").doc(id);
-        await docRef.delete();
-        classesStatus.textContent = "Class removed.";
-      } catch (err) {
-        console.error(err);
-        classesStatus.textContent = "Remove error: " + err.message;
+    addClassButton.addEventListener("click", () => {
+      if (!currentUser) {
+        classesStatus.textContent = "Sign in to save classes.";
+        return;
       }
+      if (!currentRole) {
+        classesStatus.textContent = "Choose your role first.";
+        return;
+      }
+
+      const name = newClassName.value.trim();
+      const room = newClassRoom.value.trim();
+      const year = newClassYear.value.trim();
+
+      if (!name) {
+        classesStatus.textContent = "Enter a class name.";
+        return;
+      }
+
+      const id = Date.now().toString();
+      const newClass = { id, name, room, year };
+
+      localClasses.push(newClass);
+      renderClassesInstant();
+
+      db.collection("users").doc(currentUser.uid)
+        .collection("classes").doc(id)
+        .set(newClass)
+        .catch(err => console.error("Save error:", err));
+
+      newClassName.value = "";
+      newClassRoom.value = "";
+      newClassYear.value = "";
+      classesStatus.textContent = "Class added.";
+    });
+
+    function loadClassesOnce() {
+      if (!currentUser) return;
+      db.collection("users").doc(currentUser.uid)
+        .collection("classes")
+        .get()
+        .then(snap => {
+          localClasses = [];
+          snap.forEach(doc => localClasses.push({ id: doc.id, ...doc.data() }));
+          renderClassesInstant();
+        })
+        .catch(err => {
+          console.error(err);
+          classesStatus.textContent = "Load classes error: " + err.message;
+        });
     }
 
+    // STUDENTS
     const newStudentName = document.getElementById("newStudentName");
     const newStudentId = document.getElementById("newStudentId");
     const newStudentSen = document.getElementById("newStudentSen");
@@ -1034,6 +1023,8 @@
     const addStudentButton = document.getElementById("addStudentButton");
     const studentsList = document.getElementById("studentsList");
     const studentsStatus = document.getElementById("studentsStatus");
+
+    let studentsUnsub = null;
 
     addStudentButton.addEventListener("click", async () => {
       if (!currentUser) {
@@ -1114,7 +1105,15 @@
           const action = b.getAttribute("data-action");
           if (action === "remove") {
             b.addEventListener("click", async () => {
-              await removeStudent(id);
+              if (!currentUser) return;
+              try {
+                const docRef = db.collection("users").doc(currentUser.uid).collection("students").doc(id);
+                await docRef.delete();
+                studentsStatus.textContent = "Student removed.";
+              } catch (err) {
+                console.error(err);
+                studentsStatus.textContent = "Remove error: " + err.message;
+              }
             });
           } else {
             b.addEventListener("click", () => {
@@ -1133,18 +1132,7 @@
       studentsStatus.textContent = "Students loaded.";
     }
 
-    async function removeStudent(id) {
-      if (!currentUser) return;
-      try {
-        const docRef = db.collection("users").doc(currentUser.uid).collection("students").doc(id);
-        await docRef.delete();
-        studentsStatus.textContent = "Student removed.";
-      } catch (err) {
-        console.error(err);
-        studentsStatus.textContent = "Remove error: " + err.message;
-      }
-    }
-
+    // SEATING
     const seatingGrid = document.getElementById("seatingGrid");
     const seatingStatus = document.getElementById("seatingStatus");
     const resetSeatingButton = document.getElementById("resetSeatingButton");
@@ -1277,6 +1265,7 @@
       }
     }
 
+    // EXPORT
     const generateCsvButton = document.getElementById("generateCsvButton");
     const copyCsvButton = document.getElementById("copyCsvButton");
     const csvOutput = document.getElementById("csvOutput");
@@ -1331,16 +1320,12 @@
     });
 
     function attachDataListeners() {
-      detachDataListeners();
-      attachBehaviourListener();
-      attachClassesListener();
-      attachStudentsListener();
-    }
-
-    function detachDataListeners() {
       if (behaviourCountersUnsub) { behaviourCountersUnsub(); behaviourCountersUnsub = null; }
-      if (classesUnsub) { classesUnsub(); classesUnsub = null; }
       if (studentsUnsub) { studentsUnsub(); studentsUnsub = null; }
+
+      attachBehaviourListener();
+      attachStudentsListener();
+      loadClassesOnce();
     }
 
     function resetUIData() {
@@ -1348,8 +1333,8 @@
       c2CountSpan.textContent = "0";
       c3CountSpan.textContent = "0";
       c4CountSpan.textContent = "0";
-      classesList.innerHTML = "";
-      classesStatus.textContent = "No classes yet.";
+      localClasses = [];
+      renderClassesInstant();
       studentsList.innerHTML = "";
       studentsStatus.textContent = "No students yet.";
       csvOutput.textContent = "No CSV generated yet.";
@@ -1357,6 +1342,23 @@
       buildSeatingGrid();
       seatingStatus.textContent = "Choose a class to manage seating.";
     }
+
+    auth.onAuthStateChanged(user => {
+      currentUser = user;
+      if (user) {
+        userPill.style.display = "flex";
+        userEmailSpan.textContent = user.email || "Signed in";
+        authStatus.textContent = "Signed in as " + (user.email || "user");
+        attachDataListeners();
+      } else {
+        userPill.style.display = "none";
+        userEmailSpan.textContent = "";
+        authStatus.textContent = "Not signed in.";
+        if (behaviourCountersUnsub) { behaviourCountersUnsub(); behaviourCountersUnsub = null; }
+        if (studentsUnsub) { studentsUnsub(); studentsUnsub = null; }
+        resetUIData();
+      }
+    });
   </script>
 </body>
 </html>
