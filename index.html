@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>v8cloud – Full Behaviour & Classes System</title>
+  <title>v8cloud – Behaviour & Classes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Firebase v9 compat CDN -->
+  <!-- Firebase v9 compat -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
@@ -445,8 +445,8 @@
   <div class="app-shell">
     <div class="top-bar">
       <div class="top-left">
-        <h1>v8cloud – Full Behaviour & Classes System</h1>
-        <div class="subtitle" id="roleSubtitle">Role: <span id="roleSubtitleText">Not selected</span></div>
+        <h1>v8cloud – Behaviour & Classes</h1>
+        <div class="subtitle">Role: <span id="roleSubtitleText">Not selected</span></div>
       </div>
       <div class="top-right">
         <button class="role-select" id="roleSelectButton">
@@ -485,7 +485,7 @@
       </div>
 
       <div class="content" id="contentArea">
-        <!-- CLASSES PANEL -->
+        <!-- CLASSES -->
         <div class="panel" id="classesPanel">
           <h3>Classes</h3>
           <div class="panel-subtitle">
@@ -509,7 +509,7 @@
           <div class="status-line" id="classesStatus">No classes yet.</div>
         </div>
 
-        <!-- SEATING PANEL -->
+        <!-- SEATING -->
         <div class="panel" id="seatingPanel" style="display:none;">
           <h3>Seating plan</h3>
           <div class="panel-subtitle">
@@ -525,7 +525,7 @@
           <div class="status-line" id="seatingStatus">Choose a class to manage seating.</div>
         </div>
 
-        <!-- BEHAVIOUR PANEL -->
+        <!-- BEHAVIOUR -->
         <div class="panel" id="behaviourPanel" style="display:none;">
           <h3>Behaviour – Live C1 / C2 / C3 / C4</h3>
           <div class="panel-subtitle">
@@ -593,7 +593,7 @@
           <div class="status-line" id="behaviourStatus">Behaviour counters and logs are linked to your account.</div>
         </div>
 
-        <!-- STUDENTS PANEL -->
+        <!-- STUDENTS -->
         <div class="panel" id="studentsPanel" style="display:none;">
           <h3>Students</h3>
           <div class="panel-subtitle">
@@ -617,7 +617,7 @@
           <div class="status-line" id="studentsStatus">No students yet.</div>
         </div>
 
-        <!-- EXPORT PANEL -->
+        <!-- EXPORT -->
         <div class="panel" id="exportPanel" style="display:none;">
           <h3>Export & Logs</h3>
           <div class="panel-subtitle">
@@ -633,7 +633,7 @@
           </div>
         </div>
 
-        <!-- Overlay that blocks interaction until role is chosen -->
+        <!-- Blocker until role chosen -->
         <div class="disabled-overlay" id="roleBlocker">
           <span>You must choose your role at the top before using v8cloud.</span>
         </div>
@@ -641,7 +641,7 @@
     </div>
   </div>
 
-  <!-- Role selection modal -->
+  <!-- Role modal -->
   <div class="role-modal-backdrop" id="roleModal">
     <div class="role-modal">
       <h2>Select your role</h2>
@@ -656,7 +656,6 @@
   </div>
 
   <script>
-    // --- YOUR REAL FIREBASE CONFIG (with correct bucket) ---
     const firebaseConfig = {
       apiKey: "AIzaSyBp0Yy1xR6u3DPVdqIeDYu9nzYFZej71pQ",
       authDomain: "classes-91da0.firebaseapp.com",
@@ -671,7 +670,6 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // --- Roles ---
     const roles = [
       { title: "Class Teacher", desc: "Leads a class, sets expectations, tracks behaviour and learning." },
       { title: "Head of Department", desc: "Manages whole subject area and standards." },
@@ -697,10 +695,6 @@
     let currentRole = null;
     let currentUser = null;
 
-    let behaviourDocUnsub = null;
-    let classesDocUnsub = null;
-    let studentsDocUnsub = null;
-
     roles.forEach(role => {
       const div = document.createElement("div");
       div.className = "role-chip";
@@ -723,7 +717,6 @@
       roleBlocker.style.display = "flex";
     });
 
-    // --- Navigation ---
     const navButtons = document.querySelectorAll(".nav-button");
     const panels = {
       classesPanel: document.getElementById("classesPanel"),
@@ -744,7 +737,6 @@
       });
     });
 
-    // --- Auth UI ---
     const googleLoginButton = document.getElementById("googleLoginButton");
     const emailLoginButton = document.getElementById("emailLoginButton");
     const emailInputs = document.getElementById("emailInputs");
@@ -814,7 +806,6 @@
       }
     });
 
-    // --- Behaviour counters + log ---
     const c1CountSpan = document.getElementById("c1Count");
     const c2CountSpan = document.getElementById("c2Count");
     const c3CountSpan = document.getElementById("c3Count");
@@ -825,6 +816,10 @@
     const behaviourStudentSelect = document.getElementById("behaviourStudentSelect");
     const behaviourStageSelect = document.getElementById("behaviourStageSelect");
     const logBehaviourEventButton = document.getElementById("logBehaviourEventButton");
+
+    let behaviourCountersUnsub = null;
+    let classesUnsub = null;
+    let studentsUnsub = null;
 
     behaviourButtons.forEach(btn => {
       btn.addEventListener("click", async () => {
@@ -844,21 +839,23 @@
     });
 
     async function updateBehaviourCount(type, delta) {
-      const docRef = db.collection("behaviourCounters").doc(currentUser.uid);
-      await db.runTransaction(async (tx) => {
-        const snap = await tx.get(docRef);
-        const data = snap.exists ? snap.data() : {
-          c1: 0, c2: 0, c3: 0, c4: 0,
-          role: currentRole || null,
-        };
-        const key = type;
-        let newVal = (data[key] || 0) + delta;
-        if (newVal < 0) newVal = 0;
-        data[key] = newVal;
-        data.role = currentRole || data.role;
-        tx.set(docRef, data);
-      });
-      behaviourStatus.textContent = "Behaviour updated (" + type.toUpperCase() + ").";
+      try {
+        const docRef = db.collection("users").doc(currentUser.uid).collection("behaviourCounters").doc("main");
+        await db.runTransaction(async tx => {
+          const snap = await tx.get(docRef);
+          const data = snap.exists ? snap.data() : { c1: 0, c2: 0, c3: 0, c4: 0, role: currentRole || null };
+          const key = type;
+          let newVal = (data[key] || 0) + delta;
+          if (newVal < 0) newVal = 0;
+          data[key] = newVal;
+          data.role = currentRole || data.role;
+          tx.set(docRef, data);
+        });
+        behaviourStatus.textContent = "Behaviour updated (" + type.toUpperCase() + ").";
+      } catch (err) {
+        console.error(err);
+        behaviourStatus.textContent = "Behaviour error: " + err.message;
+      }
     }
 
     logBehaviourEventButton.addEventListener("click", async () => {
@@ -878,30 +875,37 @@
       const cls = behaviourClassSelect.value || "";
       const student = behaviourStudentSelect.value || "";
       const now = new Date();
-      const docRef = db.collection("behaviourLogs").doc(currentUser.uid).collection("events").doc();
-      await docRef.set({
-        stage,
-        className: cls,
-        studentName: student,
-        role: currentRole,
-        timestamp: now.toISOString(),
-      });
-      behaviourStatus.textContent = "Behaviour event logged.";
+      try {
+        const docRef = db.collection("users").doc(currentUser.uid).collection("behaviourLogs").doc();
+        await docRef.set({
+          stage,
+          className: cls,
+          studentName: student,
+          role: currentRole,
+          timestamp: now.toISOString(),
+        });
+        behaviourStatus.textContent = "Behaviour event logged.";
+      } catch (err) {
+        console.error(err);
+        behaviourStatus.textContent = "Log error: " + err.message;
+      }
     });
 
     function attachBehaviourListener() {
       if (!currentUser) return;
-      const docRef = db.collection("behaviourCounters").doc(currentUser.uid);
-      behaviourDocUnsub = docRef.onSnapshot(snap => {
+      const docRef = db.collection("users").doc(currentUser.uid).collection("behaviourCounters").doc("main");
+      behaviourCountersUnsub = docRef.onSnapshot(snap => {
         const data = snap.data() || { c1: 0, c2: 0, c3: 0, c4: 0 };
         c1CountSpan.textContent = data.c1 || 0;
         c2CountSpan.textContent = data.c2 || 0;
         c3CountSpan.textContent = data.c3 || 0;
         c4CountSpan.textContent = data.c4 || 0;
+      }, err => {
+        console.error(err);
+        behaviourStatus.textContent = "Live counters error: " + err.message;
       });
     }
 
-    // --- Classes ---
     const newClassName = document.getElementById("newClassName");
     const newClassRoom = document.getElementById("newClassRoom");
     const newClassYear = document.getElementById("newClassYear");
@@ -926,31 +930,36 @@
         classesStatus.textContent = "Enter a class name.";
         return;
       }
-      const docRef = db.collection("classes").doc(currentUser.uid);
-      await db.runTransaction(async (tx) => {
-        const snap = await tx.get(docRef);
-        const data = snap.exists ? snap.data() : { items: [], role: currentRole || null };
-        data.items.push({
-          id: Date.now(),
+      try {
+        const colRef = db.collection("users").doc(currentUser.uid).collection("classes");
+        await colRef.add({
           name,
           room: room || "",
           year: year || "",
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        data.role = currentRole || data.role;
-        tx.set(docRef, data);
-      });
-      newClassName.value = "";
-      newClassRoom.value = "";
-      newClassYear.value = "";
-      classesStatus.textContent = "Class added.";
+        newClassName.value = "";
+        newClassRoom.value = "";
+        newClassYear.value = "";
+        classesStatus.textContent = "Class added.";
+      } catch (err) {
+        console.error(err);
+        classesStatus.textContent = "Add class error: " + err.message;
+      }
     });
 
     function attachClassesListener() {
       if (!currentUser) return;
-      const docRef = db.collection("classes").doc(currentUser.uid);
-      classesDocUnsub = docRef.onSnapshot(snap => {
-        const data = snap.data() || { items: [] };
-        renderClasses(data.items || []);
+      const colRef = db.collection("users").doc(currentUser.uid).collection("classes").orderBy("createdAt", "asc");
+      classesUnsub = colRef.onSnapshot(snap => {
+        const items = [];
+        snap.forEach(doc => {
+          items.push({ id: doc.id, ...doc.data() });
+        });
+        renderClasses(items);
+      }, err => {
+        console.error(err);
+        classesStatus.textContent = "Classes error: " + err.message;
       });
     }
 
@@ -977,7 +986,7 @@
         `;
         const buttons = div.querySelectorAll("button");
         buttons.forEach(b => {
-          const id = Number(b.getAttribute("data-id"));
+          const id = b.getAttribute("data-id");
           const action = b.getAttribute("data-action");
           if (action === "remove") {
             b.addEventListener("click", async () => {
@@ -1008,17 +1017,16 @@
 
     async function removeClass(id) {
       if (!currentUser) return;
-      const docRef = db.collection("classes").doc(currentUser.uid);
-      await db.runTransaction(async (tx) => {
-        const snap = await tx.get(docRef);
-        const data = snap.exists ? snap.data() : { items: [] };
-        data.items = (data.items || []).filter(item => item.id !== id);
-        tx.set(docRef, data);
-      });
-      classesStatus.textContent = "Class removed.";
+      try {
+        const docRef = db.collection("users").doc(currentUser.uid).collection("classes").doc(id);
+        await docRef.delete();
+        classesStatus.textContent = "Class removed.";
+      } catch (err) {
+        console.error(err);
+        classesStatus.textContent = "Remove error: " + err.message;
+      }
     }
 
-    // --- Students ---
     const newStudentName = document.getElementById("newStudentName");
     const newStudentId = document.getElementById("newStudentId");
     const newStudentSen = document.getElementById("newStudentSen");
@@ -1044,33 +1052,38 @@
         studentsStatus.textContent = "Enter a student name.";
         return;
       }
-      const docRef = db.collection("students").doc(currentUser.uid);
-      await db.runTransaction(async (tx) => {
-        const snap = await tx.get(docRef);
-        const data = snap.exists ? snap.data() : { items: [], role: currentRole || null };
-        data.items.push({
-          id: Date.now(),
+      try {
+        const colRef = db.collection("users").doc(currentUser.uid).collection("students");
+        await colRef.add({
           name,
           sid: sid || "",
           sen: sen || "",
           notes: notes || "",
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        data.role = currentRole || data.role;
-        tx.set(docRef, data);
-      });
-      newStudentName.value = "";
-      newStudentId.value = "";
-      newStudentSen.value = "";
-      newStudentNotes.value = "";
-      studentsStatus.textContent = "Student added.";
+        newStudentName.value = "";
+        newStudentId.value = "";
+        newStudentSen.value = "";
+        newStudentNotes.value = "";
+        studentsStatus.textContent = "Student added.";
+      } catch (err) {
+        console.error(err);
+        studentsStatus.textContent = "Add student error: " + err.message;
+      }
     });
 
     function attachStudentsListener() {
       if (!currentUser) return;
-      const docRef = db.collection("students").doc(currentUser.uid);
-      studentsDocUnsub = docRef.onSnapshot(snap => {
-        const data = snap.data() || { items: [] };
-        renderStudents(data.items || []);
+      const colRef = db.collection("users").doc(currentUser.uid).collection("students").orderBy("createdAt", "asc");
+      studentsUnsub = colRef.onSnapshot(snap => {
+        const items = [];
+        snap.forEach(doc => {
+          items.push({ id: doc.id, ...doc.data() });
+        });
+        renderStudents(items);
+      }, err => {
+        console.error(err);
+        studentsStatus.textContent = "Students error: " + err.message;
       });
     }
 
@@ -1097,7 +1110,7 @@
         `;
         const buttons = div.querySelectorAll("button");
         buttons.forEach(b => {
-          const id = Number(b.getAttribute("data-id"));
+          const id = b.getAttribute("data-id");
           const action = b.getAttribute("data-action");
           if (action === "remove") {
             b.addEventListener("click", async () => {
@@ -1122,17 +1135,16 @@
 
     async function removeStudent(id) {
       if (!currentUser) return;
-      const docRef = db.collection("students").doc(currentUser.uid);
-      await db.runTransaction(async (tx) => {
-        const snap = await tx.get(docRef);
-        const data = snap.exists ? snap.data() : { items: [] };
-        data.items = (data.items || []).filter(item => item.id !== id);
-        tx.set(docRef, data);
-      });
-      studentsStatus.textContent = "Student removed.";
+      try {
+        const docRef = db.collection("users").doc(currentUser.uid).collection("students").doc(id);
+        await docRef.delete();
+        studentsStatus.textContent = "Student removed.";
+      } catch (err) {
+        console.error(err);
+        studentsStatus.textContent = "Remove error: " + err.message;
+      }
     }
 
-    // --- Seating plan ---
     const seatingGrid = document.getElementById("seatingGrid");
     const seatingStatus = document.getElementById("seatingStatus");
     const resetSeatingButton = document.getElementById("resetSeatingButton");
@@ -1180,10 +1192,15 @@
         seatingStatus.textContent = "Select a class first.";
         return;
       }
-      const docRef = db.collection("seating").doc(currentUser.uid).collection("layouts").doc(cls);
-      await docRef.set({ seats: [], role: currentRole }, { merge: true });
-      seatingStatus.textContent = "Seating layout cleared.";
-      loadSeatingLayout();
+      try {
+        const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
+        await docRef.set({ seats: [], role: currentRole }, { merge: true });
+        seatingStatus.textContent = "Seating layout cleared.";
+        loadSeatingLayout();
+      } catch (err) {
+        console.error(err);
+        seatingStatus.textContent = "Seating error: " + err.message;
+      }
     });
 
     async function assignSeat(index) {
@@ -1202,23 +1219,28 @@
       }
       const studentName = prompt("Enter student name for this seat:");
       if (!studentName) return;
-      const docRef = db.collection("seating").doc(currentUser.uid).collection("layouts").doc(cls);
-      await db.runTransaction(async (tx) => {
-        const snap = await tx.get(docRef);
-        const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null };
-        const seats = data.seats || [];
-        const existingIndex = seats.findIndex(s => s.index === index);
-        if (existingIndex >= 0) {
-          seats[existingIndex].studentName = studentName;
-        } else {
-          seats.push({ index, studentName });
-        }
-        data.seats = seats;
-        data.role = currentRole || data.role;
-        tx.set(docRef, data);
-      });
-      seatingStatus.textContent = "Seat assigned.";
-      loadSeatingLayout();
+      try {
+        const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
+        await db.runTransaction(async tx => {
+          const snap = await tx.get(docRef);
+          const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null };
+          const seats = data.seats || [];
+          const existingIndex = seats.findIndex(s => s.index === index);
+          if (existingIndex >= 0) {
+            seats[existingIndex].studentName = studentName;
+          } else {
+            seats.push({ index, studentName });
+          }
+          data.seats = seats;
+          data.role = currentRole || data.role;
+          tx.set(docRef, data);
+        });
+        seatingStatus.textContent = "Seat assigned.";
+        loadSeatingLayout();
+      } catch (err) {
+        console.error(err);
+        seatingStatus.textContent = "Seat error: " + err.message;
+      }
     }
 
     async function loadSeatingLayout() {
@@ -1229,28 +1251,32 @@
         return;
       }
       buildSeatingGrid();
-      const docRef = db.collection("seating").doc(currentUser.uid).collection("layouts").doc(cls);
-      const snap = await docRef.get();
-      const data = snap.data();
-      if (!data || !data.seats || !data.seats.length) {
-        seatingStatus.textContent = "No seating layout yet for " + cls + ". Tap seats to assign.";
-        return;
-      }
-      const seats = data.seats;
-      seats.forEach(s => {
-        const div = seatingGrid.querySelector('[data-index="' + s.index + '"]');
-        if (div) {
-          div.classList.remove("empty");
-          div.innerHTML = `
-            <span>Seat ${s.index + 1}</span>
-            <small>${s.studentName}</small>
-          `;
+      try {
+        const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
+        const snap = await docRef.get();
+        const data = snap.data();
+        if (!data || !data.seats || !data.seats.length) {
+          seatingStatus.textContent = "No seating layout yet for " + cls + ". Tap seats to assign.";
+          return;
         }
-      });
-      seatingStatus.textContent = "Seating layout loaded for " + cls + ".";
+        const seats = data.seats;
+        seats.forEach(s => {
+          const div = seatingGrid.querySelector('[data-index="' + s.index + '"]');
+          if (div) {
+            div.classList.remove("empty");
+            div.innerHTML = `
+              <span>Seat ${s.index + 1}</span>
+              <small>${s.studentName}</small>
+            `;
+          }
+        });
+        seatingStatus.textContent = "Seating layout loaded for " + cls + ".";
+      } catch (err) {
+        console.error(err);
+        seatingStatus.textContent = "Load seating error: " + err.message;
+      }
     }
 
-    // --- Export / CSV ---
     const generateCsvButton = document.getElementById("generateCsvButton");
     const copyCsvButton = document.getElementById("copyCsvButton");
     const csvOutput = document.getElementById("csvOutput");
@@ -1261,27 +1287,32 @@
         exportStatus.textContent = "Sign in to generate CSV.";
         return;
       }
-      const eventsRef = db.collection("behaviourLogs").doc(currentUser.uid).collection("events");
-      const snap = await eventsRef.orderBy("timestamp", "asc").get();
-      if (snap.empty) {
-        csvOutput.textContent = "No behaviour events logged.";
-        exportStatus.textContent = "No events to export.";
-        return;
+      try {
+        const eventsRef = db.collection("users").doc(currentUser.uid).collection("behaviourLogs").orderBy("timestamp", "asc");
+        const snap = await eventsRef.get();
+        if (snap.empty) {
+          csvOutput.textContent = "No behaviour events logged.";
+          exportStatus.textContent = "No events to export.";
+          return;
+        }
+        const rows = [["timestamp", "class", "student", "stage", "role"]];
+        snap.forEach(doc => {
+          const d = doc.data();
+          rows.push([
+            d.timestamp || "",
+            d.className || "",
+            d.studentName || "",
+            d.stage || "",
+            d.role || "",
+          ]);
+        });
+        const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
+        csvOutput.textContent = csv;
+        exportStatus.textContent = "CSV generated.";
+      } catch (err) {
+        console.error(err);
+        exportStatus.textContent = "CSV error: " + err.message;
       }
-      const rows = [["timestamp", "class", "student", "stage", "role"]];
-      snap.forEach(doc => {
-        const d = doc.data();
-        rows.push([
-          d.timestamp || "",
-          d.className || "",
-          d.studentName || "",
-          d.stage || "",
-          d.role || "",
-        ]);
-      });
-      const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
-      csvOutput.textContent = csv;
-      exportStatus.textContent = "CSV generated.";
     });
 
     copyCsvButton.addEventListener("click", async () => {
@@ -1294,11 +1325,11 @@
         await navigator.clipboard.writeText(text);
         exportStatus.textContent = "CSV copied to clipboard.";
       } catch (err) {
+        console.error(err);
         exportStatus.textContent = "Could not copy CSV: " + err.message;
       }
     });
 
-    // --- Attach / detach listeners ---
     function attachDataListeners() {
       detachDataListeners();
       attachBehaviourListener();
@@ -1307,9 +1338,9 @@
     }
 
     function detachDataListeners() {
-      if (behaviourDocUnsub) { behaviourDocUnsub(); behaviourDocUnsub = null; }
-      if (classesDocUnsub) { classesDocUnsub(); classesDocUnsub = null; }
-      if (studentsDocUnsub) { studentsDocUnsub(); studentsDocUnsub = null; }
+      if (behaviourCountersUnsub) { behaviourCountersUnsub(); behaviourCountersUnsub = null; }
+      if (classesUnsub) { classesUnsub(); classesUnsub = null; }
+      if (studentsUnsub) { studentsUnsub(); studentsUnsub = null; }
     }
 
     function resetUIData() {
