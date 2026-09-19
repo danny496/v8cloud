@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>v8cloud – Behaviour & Classes (v6 classes)</title>
+  <title>v8cloud – Behaviour & Classes (V7 Hybrid Modern Compact)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Firebase v9 compat -->
@@ -15,20 +15,20 @@
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0f172a;
-      color: #e5e7eb;
+      background: #f3f4f6;
+      color: #111827;
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: stretch;
     }
     .app-shell {
       width: 100%;
       max-width: 1400px;
-      background: #020617;
-      border-radius: 16px;
-      border: 1px solid #1f2937;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      background: #f9fafb;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 10px 30px rgba(15,23,42,0.08);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -37,9 +37,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 20px;
-      border-bottom: 1px solid #1f2937;
-      background: #020617;
+      padding: 10px 16px;
+      border-bottom: 1px solid #e5e7eb;
+      background: #ffffff;
     }
     .top-left {
       display: flex;
@@ -48,38 +48,44 @@
     }
     .top-bar h1 {
       margin: 0;
-      font-size: 1.1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #111827;
     }
     .subtitle {
       font-size: 0.8rem;
-      color: #9ca3af;
+      color: #6b7280;
     }
     .top-right {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     .role-select {
       padding: 6px 10px;
       border-radius: 999px;
-      border: 1px solid #4b5563;
-      background: #0b1120;
-      color: #e5e7eb;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      color: #111827;
       font-size: 0.8rem;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     .role-select span {
-      color: #9ca3af;
+      color: #6b7280;
     }
     .user-pill {
       padding: 6px 10px;
       border-radius: 999px;
-      background: #111827;
-      border: 1px solid #374151;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
       font-size: 0.8rem;
       display: flex;
       align-items: center;
       gap: 6px;
+      color: #1f2937;
     }
     .user-pill button {
       border: none;
@@ -92,88 +98,97 @@
     }
     .main-layout {
       display: grid;
-      grid-template-columns: 260px 1fr;
+      grid-template-columns: 240px 1fr;
       min-height: 620px;
+      background: #f3f4f6;
     }
     .sidebar {
-      border-right: 1px solid #1f2937;
-      background: #020617;
-      padding: 12px;
+      border-right: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 10px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
     .sidebar h2 {
       margin: 0;
-      font-size: 0.9rem;
-      color: #9ca3af;
+      font-size: 0.85rem;
+      color: #6b7280;
+      font-weight: 500;
     }
     .nav-button {
       width: 100%;
       text-align: left;
-      padding: 8px 10px;
+      padding: 7px 9px;
       border-radius: 8px;
-      border: 1px solid #1f2937;
-      background: #0b1120;
-      color: #e5e7eb;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      color: #111827;
       font-size: 0.85rem;
       cursor: pointer;
     }
     .nav-button.active {
       border-color: #3b82f6;
-      background: #1d283a;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-weight: 500;
     }
     .content {
-      padding: 16px 20px;
+      padding: 12px 16px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
       position: relative;
     }
     .panel {
-      border-radius: 12px;
-      border: 1px solid #1f2937;
-      background: #020617;
-      padding: 14px 16px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      padding: 10px 12px;
     }
     .panel h3 {
-      margin: 0 0 8px 0;
+      margin: 0 0 6px 0;
       font-size: 0.95rem;
+      font-weight: 600;
+      color: #111827;
     }
     .panel-subtitle {
       font-size: 0.8rem;
-      color: #9ca3af;
-      margin-bottom: 10px;
+      color: #6b7280;
+      margin-bottom: 8px;
     }
     .login-buttons {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 8px;
+      gap: 8px;
+      margin-top: 6px;
     }
     .btn {
       border-radius: 999px;
-      border: 1px solid #374151;
-      background: #111827;
-      color: #e5e7eb;
-      padding: 8px 14px;
-      font-size: 0.85rem;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #111827;
+      padding: 7px 12px;
+      font-size: 0.8rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
     }
     .btn-primary {
-      border-color: #3b82f6;
-      background: #1d4ed8;
+      border-color: #2563eb;
+      background: #2563eb;
+      color: #ffffff;
     }
     .btn-danger {
       border-color: #ef4444;
-      background: #b91c1c;
+      background: #ef4444;
+      color: #ffffff;
     }
     .btn-secondary {
-      border-color: #6b7280;
-      background: #374151;
+      border-color: #9ca3af;
+      background: #f3f4f6;
+      color: #111827;
     }
     .btn:disabled {
       opacity: 0.5;
@@ -182,17 +197,17 @@
     .input-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
+      gap: 6px;
+      margin-top: 6px;
     }
     .input-row input, .input-row select, .input-row textarea {
       flex: 1;
       min-width: 140px;
       padding: 6px 8px;
       border-radius: 8px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #111827;
       font-size: 0.8rem;
     }
     textarea {
@@ -201,30 +216,30 @@
     }
     .status-line {
       font-size: 0.8rem;
-      color: #9ca3af;
+      color: #6b7280;
       margin-top: 6px;
     }
     .classes-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 8px;
+      gap: 6px;
+      margin-top: 6px;
     }
     .class-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 10px;
+      padding: 7px 9px;
       border-radius: 8px;
-      border: 1px solid #1f2937;
-      background: #0b1120;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
       font-size: 0.85rem;
     }
     .class-item span {
-      color: #e5e7eb;
+      color: #111827;
     }
     .class-item small {
-      color: #9ca3af;
+      color: #6b7280;
       font-size: 0.75rem;
     }
     .class-item button {
@@ -233,14 +248,14 @@
     .behaviour-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 10px;
+      gap: 8px;
+      margin-top: 8px;
     }
     .beh-card {
-      border-radius: 10px;
-      border: 1px solid #1f2937;
-      background: #0b1120;
-      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 8px;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -253,9 +268,12 @@
     }
     .beh-label {
       font-weight: 600;
+      color: #111827;
     }
     .beh-count {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #1f2937;
     }
     .beh-buttons {
       display: flex;
@@ -265,58 +283,59 @@
       flex: 1;
       padding: 6px 8px;
       border-radius: 999px;
-      border: 1px solid #374151;
-      background: #111827;
-      color: #e5e7eb;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #111827;
       font-size: 0.75rem;
       cursor: pointer;
     }
     .beh-buttons button.inc {
       border-color: #f97316;
-      background: #ea580c;
+      background: #f97316;
+      color: #ffffff;
     }
     .beh-buttons button.dec {
-      border-color: #6b7280;
-      background: #374151;
+      border-color: #9ca3af;
+      background: #f3f4f6;
     }
     .seating-grid {
       display: grid;
       grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 6px;
-      margin-top: 10px;
+      gap: 5px;
+      margin-top: 8px;
     }
     .seat {
       border-radius: 8px;
-      border: 1px solid #1f2937;
-      background: #0b1120;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
       padding: 6px;
       font-size: 0.75rem;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
       cursor: pointer;
     }
     .seat.empty {
-      opacity: 0.5;
+      opacity: 0.6;
     }
     .seat span {
-      color: #e5e7eb;
+      color: #111827;
     }
     .seat small {
-      color: #9ca3af;
+      color: #6b7280;
       font-size: 0.7rem;
     }
     .students-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 8px;
+      gap: 6px;
+      margin-top: 6px;
     }
     .student-item {
       border-radius: 8px;
-      border: 1px solid #1f2937;
-      background: #0b1120;
-      padding: 8px 10px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 7px 9px;
       font-size: 0.85rem;
       display: flex;
       justify-content: space-between;
@@ -328,10 +347,10 @@
       gap: 2px;
     }
     .student-main span {
-      color: #e5e7eb;
+      color: #111827;
     }
     .student-main small {
-      color: #9ca3af;
+      color: #6b7280;
       font-size: 0.75rem;
     }
     .student-actions {
@@ -343,18 +362,18 @@
       font-size: 0.75rem;
     }
     .export-area {
-      margin-top: 10px;
+      margin-top: 8px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
     .export-output {
       border-radius: 8px;
-      border: 1px solid #1f2937;
-      background: #020617;
-      padding: 8px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 7px;
       font-size: 0.75rem;
-      color: #9ca3af;
+      color: #4b5563;
       max-height: 200px;
       overflow-y: auto;
       white-space: pre;
@@ -362,7 +381,7 @@
     .role-modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15,23,42,0.9);
+      background: rgba(17,24,39,0.25);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -370,35 +389,37 @@
     }
     .role-modal {
       width: 100%;
-      max-width: 640px;
-      background: #020617;
-      border-radius: 16px;
-      border: 1px solid #1f2937;
-      padding: 18px 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+      max-width: 560px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      padding: 14px 16px;
+      box-shadow: 0 20px 40px rgba(15,23,42,0.15);
     }
     .role-modal h2 {
       margin: 0 0 6px 0;
-      font-size: 1rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #111827;
     }
     .role-modal p {
-      margin: 0 0 10px 0;
-      font-size: 0.85rem;
-      color: #9ca3af;
+      margin: 0 0 8px 0;
+      font-size: 0.8rem;
+      color: #6b7280;
     }
     .role-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 8px;
-      max-height: 260px;
+      gap: 6px;
+      margin-top: 6px;
+      max-height: 240px;
       overflow-y: auto;
     }
     .role-chip {
-      border-radius: 10px;
-      border: 1px solid #374151;
-      background: #0b1120;
-      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 7px 9px;
       cursor: pointer;
       font-size: 0.85rem;
       display: flex;
@@ -407,24 +428,25 @@
     }
     .role-chip:hover {
       border-color: #3b82f6;
-      background: #1d283a;
+      background: #eff6ff;
     }
     .role-chip-title {
       font-weight: 600;
+      color: #111827;
     }
     .role-chip-desc {
       font-size: 0.8rem;
-      color: #9ca3af;
+      color: #6b7280;
     }
     .role-modal-footer {
-      margin-top: 10px;
+      margin-top: 8px;
       font-size: 0.8rem;
-      color: #9ca3af;
+      color: #6b7280;
     }
     .disabled-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(15,23,42,0.75);
+      background: rgba(243,244,246,0.8);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -432,12 +454,12 @@
       z-index: 40;
     }
     .disabled-overlay span {
-      background: #020617;
+      background: #ffffff;
       border-radius: 999px;
       border: 1px solid #f97316;
-      padding: 8px 14px;
-      font-size: 0.85rem;
-      color: #f97316;
+      padding: 7px 12px;
+      font-size: 0.8rem;
+      color: #b45309;
     }
   </style>
 </head>
@@ -468,7 +490,7 @@
         <button class="nav-button" data-target="studentsPanel">Students</button>
         <button class="nav-button" data-target="exportPanel">Export / Logs</button>
 
-        <div class="panel" style="margin-top:12px;">
+        <div class="panel" style="margin-top:10px;">
           <h3>Authentication</h3>
           <div class="panel-subtitle">Sign in to link data to your account.</div>
           <div class="login-buttons">
@@ -897,7 +919,6 @@
     const classesStatus = document.getElementById("classesStatus");
     const seatingClassSelect = document.getElementById("seatingClassSelect");
 
-    // local array like v6
     let localClasses = [];
 
     function renderClassesInstant() {
