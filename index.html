@@ -298,33 +298,6 @@
       border-color: #9ca3af;
       background: #f3f4f6;
     }
-    .seating-grid {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 5px;
-      margin-top: 8px;
-    }
-    .seat {
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      padding: 6px;
-      font-size: 0.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      cursor: pointer;
-    }
-    .seat.empty {
-      opacity: 0.6;
-    }
-    .seat span {
-      color: #111827;
-    }
-    .seat small {
-      color: #6b7280;
-      font-size: 0.7rem;
-    }
     .students-list {
       display: flex;
       flex-direction: column;
@@ -461,6 +434,191 @@
       font-size: 0.8rem;
       color: #b45309;
     }
+
+    /* Seating plan V7-style */
+    .seating-layout {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .seating-left {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .seating-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .seating-toolbar button {
+      font-size: 0.75rem;
+    }
+    .seating-top-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .seating-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 5px;
+      margin-top: 8px;
+    }
+    .seat {
+      border-radius: 6px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 6px;
+      font-size: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      cursor: pointer;
+      position: relative;
+    }
+    .seat.empty {
+      opacity: 0.6;
+    }
+    .seat span {
+      color: #111827;
+    }
+    .seat small {
+      color: #6b7280;
+      font-size: 0.7rem;
+    }
+    .seating-add-panel {
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 8px;
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .seating-add-panel h4 {
+      margin: 0;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #111827;
+    }
+    .seating-right {
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 8px;
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .seating-right h4 {
+      margin: 0;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #111827;
+    }
+    .beh-panel-section {
+      margin-top: 4px;
+    }
+    .beh-panel-section-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+    .beh-panel-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .beh-tag-btn {
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #111827;
+      padding: 4px 8px;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+    .beh-tag-btn.positive {
+      border-color: #22c55e;
+      background: #dcfce7;
+      color: #166534;
+    }
+    .beh-tag-btn.negative {
+      border-color: #ef4444;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .beh-panel-tabs {
+      display: flex;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .beh-tab {
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #111827;
+      padding: 4px 8px;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+    .beh-tab.active {
+      border-color: #3b82f6;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+    .beh-log {
+      border-radius: 6px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      padding: 6px;
+      font-size: 0.75rem;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+
+    /* Add Note modal */
+    .note-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(17,24,39,0.35);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 60;
+    }
+    .note-modal {
+      width: 100%;
+      max-width: 420px;
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      padding: 10px 12px;
+      box-shadow: 0 20px 40px rgba(15,23,42,0.2);
+      font-size: 0.8rem;
+    }
+    .note-modal h3 {
+      margin: 0 0 6px 0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #111827;
+    }
+    .note-modal textarea {
+      width: 100%;
+      margin-top: 4px;
+    }
+    .note-modal-actions {
+      margin-top: 8px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+    }
   </style>
 </head>
 <body>
@@ -535,16 +693,103 @@
         <div class="panel" id="seatingPanel" style="display:none;">
           <h3>Seating plan</h3>
           <div class="panel-subtitle">
-            Select a class, then assign students to seats. Layout is saved per class.
+            Click a class to open its seating layout. Layouts can be Custom, Diagonal, Horizontal, or Both.
           </div>
-          <div class="input-row">
-            <select id="seatingClassSelect">
-              <option value="">Select class for seating</option>
-            </select>
-            <button class="btn btn-secondary" id="resetSeatingButton">Clear seating layout</button>
+
+          <div class="seating-layout">
+            <div class="seating-left">
+              <div class="seating-top-row">
+                <select id="seatingClassSelect">
+                  <option value="">Select class for seating</option>
+                </select>
+                <select id="seatingLayoutSelect">
+                  <option value="custom">Custom (empty)</option>
+                  <option value="diagonal">Diagonal (12 desks)</option>
+                  <option value="horizontal">Horizontal (10 desks)</option>
+                  <option value="both">Both layouts</option>
+                </select>
+                <button class="btn btn-secondary" id="resetSeatingButton">Clear seating layout</button>
+              </div>
+
+              <div class="seating-toolbar">
+                <button class="btn btn-secondary" id="roomButton">Room</button>
+                <button class="btn btn-secondary" id="awardMultipleButton">Award multiple</button>
+                <button class="btn btn-secondary" id="attendanceButton">Attendance</button>
+                <button class="btn btn-secondary" id="randomPupilButton">Random pupil</button>
+                <button class="btn btn-secondary" id="rearrangeButton">Rearrange</button>
+                <button class="btn btn-secondary" id="influencesButton">Influences</button>
+                <button class="btn btn-secondary" id="homeworkButton">Homework</button>
+              </div>
+
+              <div class="seating-add-panel">
+                <h4>Add Student Desk</h4>
+                <div class="input-row">
+                  <input type="text" id="seatImageUrl" placeholder="Profile image URL (optional)" />
+                  <input type="text" id="seatStudentName" placeholder="Student name" />
+                  <select id="seatShapeSelect">
+                    <option value="rectangle">Rectangle</option>
+                  </select>
+                  <button class="btn btn-primary" id="addSeatButton">Add Student Desk</button>
+                </div>
+              </div>
+
+              <div class="seating-grid" id="seatingGrid"></div>
+              <div class="status-line" id="seatingStatus">Choose a class to manage seating.</div>
+            </div>
+
+            <div class="seating-right">
+              <h4 id="seatingRightTitle">No desk selected</h4>
+
+              <div class="beh-panel-section">
+                <div class="beh-panel-section-title">Positive</div>
+                <div class="beh-panel-buttons">
+                  <button class="beh-tag-btn positive" data-tag="P1 (+1)">P1 (+1)</button>
+                  <button class="beh-tag-btn positive" data-tag="P2 (+2)">P2 (+2)</button>
+                  <button class="beh-tag-btn positive" data-tag="P3 (+3)">P3 (+3)</button>
+                  <button class="beh-tag-btn positive" data-tag="P4 (+4)">P4 (+4)</button>
+                  <button class="beh-tag-btn positive" data-tag="Star Student (+10)">Star Student (+10)</button>
+                  <button class="beh-tag-btn positive" data-tag="Year 11 (+1)">Year 11 (+1)</button>
+                  <button class="beh-tag-btn positive" data-tag="Book Presentation (+2)">Book Presentation (+2)</button>
+                  <button class="beh-tag-btn positive" data-tag="Great Uniform (+1)">Great Uniform (+1)</button>
+                  <button class="beh-tag-btn positive" data-tag="Attendance Positive (+1)">Attendance Positive (+1)</button>
+                  <button class="beh-tag-btn positive" data-tag="Politeness (+1)">Politeness (+1)</button>
+                </div>
+              </div>
+
+              <div class="beh-panel-section">
+                <div class="beh-panel-section-title">Negative</div>
+                <div class="beh-panel-buttons">
+                  <button class="beh-tag-btn negative" data-tag="C2">C2</button>
+                  <button class="beh-tag-btn negative" data-tag="C3">C3</button>
+                  <button class="beh-tag-btn negative" data-tag="C4">C4</button>
+                  <button class="beh-tag-btn negative" data-tag="Late">Late</button>
+                  <button class="beh-tag-btn negative" data-tag="Truancy">Truancy</button>
+                  <button class="beh-tag-btn negative" data-tag="Physical">Physical</button>
+                  <button class="beh-tag-btn negative" data-tag="MIA (0)">MIA (0)</button>
+                  <button class="beh-tag-btn negative" data-tag="I Need Support (0)">I Need Support (0)</button>
+                  <button class="beh-tag-btn negative" data-tag="Out of Bounds (-1)">Out of Bounds (-1)</button>
+                  <button class="beh-tag-btn negative" data-tag="Refusal (-1)">Refusal (-1)</button>
+                  <button class="beh-tag-btn negative" data-tag="Bullying (-1)">Bullying (-1)</button>
+                  <button class="beh-tag-btn negative" data-tag="Urgent On Call (0)">Urgent On Call (0)</button>
+                  <button class="beh-tag-btn negative" data-tag="Toilet">Toilet</button>
+                  <button class="beh-tag-btn negative" data-tag="Uniform">Uniform</button>
+                </div>
+              </div>
+
+              <div class="beh-panel-tabs">
+                <button class="beh-tab active" data-tab="sen">SEN</button>
+                <button class="beh-tab" data-tab="notes">Notes</button>
+                <button class="beh-tab" data-tab="qa">Q+A</button>
+              </div>
+
+              <div class="beh-panel-section">
+                <div class="beh-panel-section-title">Behaviour Log</div>
+                <div class="beh-log" id="seatBehaviourLog">No events yet.</div>
+              </div>
+
+              <button class="btn btn-secondary" id="openNoteModalButton">Add Note</button>
+            </div>
           </div>
-          <div class="seating-grid" id="seatingGrid"></div>
-          <div class="status-line" id="seatingStatus">Choose a class to manage seating.</div>
         </div>
 
         <!-- BEHAVIOUR -->
@@ -673,6 +918,18 @@
       <div class="role-list" id="roleList"></div>
       <div class="role-modal-footer">
         You cannot use the app until a role is selected. You can change it later from the top bar.
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Note modal -->
+  <div class="note-modal-backdrop" id="noteModalBackdrop">
+    <div class="note-modal">
+      <h3>Add Note</h3>
+      <textarea id="noteModalText" placeholder="Type note here..."></textarea>
+      <div class="note-modal-actions">
+        <button class="btn btn-secondary" id="noteCancelButton">Cancel</button>
+        <button class="btn btn-primary" id="noteSaveButton">Save</button>
       </div>
     </div>
   </div>
@@ -964,6 +1221,7 @@
               seatingClassSelect.value = item.name;
               behaviourClassSelect.value = item.name;
               classesStatus.textContent = "Selected class: " + item.name;
+              loadSeatingLayout(); // open seating for this class
             });
           }
         });
@@ -1157,11 +1415,28 @@
     const seatingGrid = document.getElementById("seatingGrid");
     const seatingStatus = document.getElementById("seatingStatus");
     const resetSeatingButton = document.getElementById("resetSeatingButton");
+    const seatingLayoutSelect = document.getElementById("seatingLayoutSelect");
+    const seatImageUrl = document.getElementById("seatImageUrl");
+    const seatStudentName = document.getElementById("seatStudentName");
+    const seatShapeSelect = document.getElementById("seatShapeSelect");
+    const addSeatButton = document.getElementById("addSeatButton");
+    const seatingRightTitle = document.getElementById("seatingRightTitle");
+    const seatBehaviourLog = document.getElementById("seatBehaviourLog");
+    const behTagButtons = document.querySelectorAll(".beh-tag-btn");
+    const behTabs = document.querySelectorAll(".beh-tab");
+    const openNoteModalButton = document.getElementById("openNoteModalButton");
+
+    const noteModalBackdrop = document.getElementById("noteModalBackdrop");
+    const noteModalText = document.getElementById("noteModalText");
+    const noteCancelButton = document.getElementById("noteCancelButton");
+    const noteSaveButton = document.getElementById("noteSaveButton");
 
     const SEAT_ROWS = 4;
     const SEAT_COLS = 6;
 
-    function buildSeatingGrid() {
+    let currentSeatIndex = null;
+
+    function buildEmptySeatingGrid() {
       seatingGrid.innerHTML = "";
       for (let r = 0; r < SEAT_ROWS; r++) {
         for (let c = 0; c < SEAT_COLS; c++) {
@@ -1174,17 +1449,21 @@
             <small>Empty</small>
           `;
           div.addEventListener("click", () => {
-            assignSeat(idx);
+            selectSeat(idx);
           });
           seatingGrid.appendChild(div);
         }
       }
     }
 
-    buildSeatingGrid();
+    buildEmptySeatingGrid();
 
     seatingClassSelect.addEventListener("change", () => {
       loadSeatingLayout();
+    });
+
+    seatingLayoutSelect.addEventListener("change", () => {
+      applyLayoutChoice();
     });
 
     resetSeatingButton.addEventListener("click", async () => {
@@ -1203,7 +1482,7 @@
       }
       try {
         const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
-        await docRef.set({ seats: [], role: currentRole }, { merge: true });
+        await docRef.set({ seats: [], role: currentRole, layout: seatingLayoutSelect.value || "custom", notes: {} }, { merge: true });
         seatingStatus.textContent = "Seating layout cleared.";
         loadSeatingLayout();
       } catch (err) {
@@ -1212,7 +1491,7 @@
       }
     });
 
-    async function assignSeat(index) {
+    addSeatButton.addEventListener("click", async () => {
       if (!currentUser) {
         seatingStatus.textContent = "Sign in to manage seating.";
         return;
@@ -1226,64 +1505,257 @@
         seatingStatus.textContent = "Select a class first.";
         return;
       }
-      const studentName = prompt("Enter student name for this seat:");
-      if (!studentName) return;
+      const name = seatStudentName.value.trim();
+      const img = seatImageUrl.value.trim();
+      const shape = seatShapeSelect.value || "rectangle";
+      if (!name) {
+        seatingStatus.textContent = "Enter a student name for the desk.";
+        return;
+      }
       try {
         const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
         await db.runTransaction(async tx => {
           const snap = await tx.get(docRef);
-          const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null };
+          const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout: seatingLayoutSelect.value || "custom", notes: {} };
           const seats = data.seats || [];
-          const existingIndex = seats.findIndex(s => s.index === index);
-          if (existingIndex >= 0) {
-            seats[existingIndex].studentName = studentName;
-          } else {
-            seats.push({ index, studentName });
-          }
+          let index = seats.length;
+          if (index >= SEAT_ROWS * SEAT_COLS) index = SEAT_ROWS * SEAT_COLS - 1;
+          seats.push({ index, studentName: name, imageUrl: img, shape });
           data.seats = seats;
           data.role = currentRole || data.role;
           tx.set(docRef, data);
         });
-        seatingStatus.textContent = "Seat assigned.";
+        seatingStatus.textContent = "Student desk added.";
+        seatStudentName.value = "";
+        seatImageUrl.value = "";
         loadSeatingLayout();
       } catch (err) {
         console.error(err);
         seatingStatus.textContent = "Seat error: " + err.message;
       }
+    });
+
+    function selectSeat(index) {
+      currentSeatIndex = index;
+      const cls = seatingClassSelect.value || "";
+      seatingRightTitle.textContent = cls ? `Desk ${index + 1} – ${cls}` : `Desk ${index + 1}`;
+      loadSeatBehaviourLog();
     }
 
-    async function loadSeatingLayout() {
-      const cls = seatingClassSelect.value;
-      if (!currentUser || !cls) {
-        buildSeatingGrid();
-        seatingStatus.textContent = "Choose a class to manage seating.";
+    behTagButtons.forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (currentSeatIndex === null) return;
+        if (!currentUser) return;
+        const cls = seatingClassSelect.value || "";
+        if (!cls) return;
+        const tag = btn.getAttribute("data-tag");
+        try {
+          const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
+          await db.runTransaction(async tx => {
+            const snap = await tx.get(docRef);
+            const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout: seatingLayoutSelect.value || "custom", notes: {} };
+            const logs = data.logs || {};
+            const seatKey = String(currentSeatIndex);
+            const seatLogs = logs[seatKey] || [];
+            seatLogs.push({ tag, timestamp: new Date().toISOString() });
+            logs[seatKey] = seatLogs;
+            data.logs = logs;
+            tx.set(docRef, data);
+          });
+          loadSeatBehaviourLog();
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    });
+
+    behTabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        behTabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+      });
+    });
+
+    openNoteModalButton.addEventListener("click", () => {
+      if (currentSeatIndex === null) return;
+      noteModalText.value = "";
+      noteModalBackdrop.style.display = "flex";
+    });
+
+    noteCancelButton.addEventListener("click", () => {
+      noteModalBackdrop.style.display = "none";
+    });
+
+    noteSaveButton.addEventListener("click", async () => {
+      if (currentSeatIndex === null) return;
+      if (!currentUser) return;
+      const cls = seatingClassSelect.value || "";
+      if (!cls) return;
+      const noteText = noteModalText.value.trim();
+      noteModalBackdrop.style.display = "none";
+      if (!noteText) return;
+      try {
+        const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
+        await db.runTransaction(async tx => {
+          const snap = await tx.get(docRef);
+          const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout: seatingLayoutSelect.value || "custom", notes: {} };
+          const notes = data.notes || {};
+          const seatKey = String(currentSeatIndex);
+          const seatNotes = notes[seatKey] || [];
+          seatNotes.push({ text: noteText, timestamp: new Date().toISOString() });
+          notes[seatKey] = seatNotes;
+          data.notes = notes;
+          tx.set(docRef, data);
+        });
+        loadSeatBehaviourLog();
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    async function loadSeatBehaviourLog() {
+      const cls = seatingClassSelect.value || "";
+      if (!currentUser || !cls || currentSeatIndex === null) {
+        seatBehaviourLog.textContent = "No events yet.";
         return;
       }
-      buildSeatingGrid();
       try {
         const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
         const snap = await docRef.get();
         const data = snap.data();
-        if (!data || !data.seats || !data.seats.length) {
-          seatingStatus.textContent = "No seating layout yet for " + cls + ". Tap seats to assign.";
+        if (!data) {
+          seatBehaviourLog.textContent = "No events yet.";
           return;
         }
-        const seats = data.seats;
-        seats.forEach(s => {
-          const div = seatingGrid.querySelector('[data-index="' + s.index + '"]');
-          if (div) {
-            div.classList.remove("empty");
-            div.innerHTML = `
-              <span>Seat ${s.index + 1}</span>
-              <small>${s.studentName}</small>
-            `;
-          }
+        const logs = data.logs || {};
+        const notes = data.notes || {};
+        const seatKey = String(currentSeatIndex);
+        const seatLogs = logs[seatKey] || [];
+        const seatNotes = notes[seatKey] || [];
+        if (!seatLogs.length && !seatNotes.length) {
+          seatBehaviourLog.textContent = "No events yet.";
+          return;
+        }
+        const lines = [];
+        seatLogs.forEach(l => {
+          lines.push(`[LOG] ${l.timestamp} – ${l.tag}`);
         });
+        seatNotes.forEach(n => {
+          lines.push(`[NOTE] ${n.timestamp} – ${n.text}`);
+        });
+        seatBehaviourLog.textContent = lines.join("\n");
+      } catch (err) {
+        console.error(err);
+        seatBehaviourLog.textContent = "Error loading log.";
+      }
+    }
+
+    async function loadSeatingLayout() {
+      const cls = seatingClassSelect.value;
+      currentSeatIndex = null;
+      seatingRightTitle.textContent = "No desk selected";
+      seatBehaviourLog.textContent = "No events yet.";
+
+      if (!currentUser || !cls) {
+        buildEmptySeatingGrid();
+        seatingStatus.textContent = "Choose a class to manage seating.";
+        return;
+      }
+      buildEmptySeatingGrid();
+      try {
+        const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
+        const snap = await docRef.get();
+        const data = snap.data();
+        if (!data) {
+          seatingStatus.textContent = "No seating layout yet for " + cls + ". Choose a layout or add desks.";
+          return;
+        }
+        const seats = data.seats || [];
+        const layout = data.layout || "custom";
+        seatingLayoutSelect.value = layout;
+        applyLayoutChoiceFromData(seats, layout);
         seatingStatus.textContent = "Seating layout loaded for " + cls + ".";
       } catch (err) {
         console.error(err);
         seatingStatus.textContent = "Load seating error: " + err.message;
       }
+    }
+
+    function applyLayoutChoice() {
+      const cls = seatingClassSelect.value;
+      if (!currentUser || !cls) {
+        seatingStatus.textContent = "Select a class first.";
+        return;
+      }
+      const layout = seatingLayoutSelect.value || "custom";
+      db.collection("users").doc(currentUser.uid).collection("seating").doc(cls)
+        .set({ layout }, { merge: true })
+        .then(() => {
+          generateLayoutDesks(layout);
+        })
+        .catch(err => console.error(err));
+    }
+
+    async function generateLayoutDesks(layout) {
+      const cls = seatingClassSelect.value;
+      if (!currentUser || !cls) return;
+      try {
+        const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
+        await db.runTransaction(async tx => {
+          const snap = await tx.get(docRef);
+          const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout, notes: {} };
+          let seats = [];
+          if (layout === "custom") {
+            seats = data.seats || [];
+          } else if (layout === "diagonal") {
+            seats = [];
+            const indices = [0, 7, 14, 21, 5, 10, 15, 20, 3, 9, 18, 23];
+            indices.forEach((idx, i) => {
+              seats.push({ index: idx, studentName: "Desk " + (i + 1), imageUrl: "", shape: "rectangle" });
+            });
+          } else if (layout === "horizontal") {
+            seats = [];
+            const indices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+            indices.forEach((idx, i) => {
+              seats.push({ index: idx, studentName: "Desk " + (i + 1), imageUrl: "", shape: "rectangle" });
+            });
+          } else if (layout === "both") {
+            seats = [];
+            const diag = [0, 7, 14, 21, 5, 10];
+            const horiz = [1, 2, 3, 4, 6, 8, 9, 11];
+            let i = 0;
+            diag.forEach(idx => {
+              seats.push({ index: idx, studentName: "Diag " + (++i), imageUrl: "", shape: "rectangle" });
+            });
+            horiz.forEach(idx => {
+              seats.push({ index: idx, studentName: "Horiz " + (++i), imageUrl: "", shape: "rectangle" });
+            });
+          }
+          data.seats = seats;
+          data.role = currentRole || data.role;
+          tx.set(docRef, data);
+        });
+        loadSeatingLayout();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function applyLayoutChoiceFromData(seats, layout) {
+      buildEmptySeatingGrid();
+      seats.forEach(s => {
+        const div = seatingGrid.querySelector('[data-index="' + s.index + '"]');
+        if (div) {
+          div.classList.remove("empty");
+          div.innerHTML = `
+            <span>${s.studentName || ("Seat " + (s.index + 1))}</span>
+            <small>${s.shape || "rectangle"}</small>
+          `;
+          div.addEventListener("click", () => {
+            selectSeat(s.index);
+          });
+        }
+      });
     }
 
     // EXPORT
@@ -1360,8 +1832,9 @@
       studentsStatus.textContent = "No students yet.";
       csvOutput.textContent = "No CSV generated yet.";
       exportStatus.textContent = "CSV includes timestamp, class, student, stage, role.";
-      buildSeatingGrid();
+      buildEmptySeatingGrid();
       seatingStatus.textContent = "Choose a class to manage seating.";
+      seatingLayoutSelect.value = "custom";
     }
 
     auth.onAuthStateChanged(user => {
