@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>v8cloud – V6 Sliding Panels (10×10)</title>
- meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Firebase v9 compat -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -336,55 +336,93 @@
       white-space: pre-wrap;
     }
 
-    .bottom-panel-toggle {
+    .overlay-trigger {
       position: absolute;
-      bottom: 0;
-      right: 340px;
-      z-index: 20;
-    }
-    .bottom-panel-toggle button {
-      border-radius: 999px 999px 0 0;
-      border: 1px solid #d1d5db;
-      background: #ffffff;
-      color: #111827;
-      padding: 4px 10px;
-      font-size: 0.75rem;
-      cursor: pointer;
-      box-shadow: 0 -2px 6px rgba(15,23,42,0.1);
-    }
-    .bottom-panel {
-      position: absolute;
-      bottom: -140px;
-      right: 0;
-      width: 320px;
-      height: 140px;
-      background: #ffffff;
-      border-top: 1px solid #e5e7eb;
-      border-left: 1px solid #e5e7eb;
-      box-shadow: -4px -4px 12px rgba(15,23,42,0.12);
-      padding: 8px 10px;
+      bottom: 12px;
+      right: 16px;
       display: flex;
       flex-direction: column;
       gap: 6px;
-      transition: bottom 0.25s ease;
-      z-index: 14;
-      font-size: 0.8rem;
+      z-index: 25;
     }
-    .bottom-panel.open {
+    .overlay-trigger button {
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #111827;
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(15,23,42,0.15);
+    }
+
+    .overlay-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(17,24,39,0.45);
+      display: none;
+      z-index: 50;
+    }
+    .overlay-panel {
+      position: absolute;
       bottom: 0;
+      right: 0;
+      width: 360px;
+      max-width: 100%;
+      height: 260px;
+      background: #ffffff;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 0;
+      border-top: 1px solid #e5e7eb;
+      border-left: 1px solid #e5e7eb;
+      box-shadow: -6px -6px 18px rgba(15,23,42,0.25);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transform: translateY(100%);
+      transition: transform 0.25s ease;
     }
-    .bottom-buttons {
+    .overlay-panel.open {
+      transform: translateY(0);
+    }
+    .overlay-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #111827;
+    }
+    .overlay-subtitle {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    .overlay-buttons {
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: 6px;
+      margin-top: 8px;
     }
-    .bottom-btn {
+    .overlay-btn {
       border-radius: 999px;
       border: 1px solid #d1d5db;
       background: #f9fafb;
       color: #111827;
-      padding: 4px 8px;
-      font-size: 0.7rem;
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .overlay-footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+    .overlay-footer button {
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #111827;
+      padding: 5px 10px;
+      font-size: 0.75rem;
       cursor: pointer;
     }
 
@@ -534,21 +572,21 @@
           <button class="btn btn-secondary" id="openNoteModalButton">Add note to seat</button>
         </div>
 
-        <div class="bottom-panel-toggle">
-          <button id="bottomToggleButton">Toilet / Uniform</button>
+        <div class="overlay-trigger">
+          <button id="toiletOverlayButton">Toilet overlay</button>
+          <button id="uniformOverlayButton">Uniform overlay</button>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="bottom-panel" id="bottomPanel">
-          <div style="font-weight:600;color:#111827;">Quick flags</div>
-          <div class="bottom-buttons">
-            <button class="bottom-btn" data-tag="Toilet">Toilet</button>
-            <button class="bottom-btn" data-tag="Uniform">Uniform</button>
-            <button class="bottom-btn" data-tag="Out of Bounds">Out of Bounds</button>
-            <button class="bottom-btn" data-tag="Urgent On Call">Urgent On Call</button>
-            <button class="bottom-btn" data-tag="I Need Support">I Need Support</button>
-          </div>
-          <div class="slide-log" id="bottomLog">No quick flags yet.</div>
-        </div>
+  <div class="overlay-backdrop" id="overlayBackdrop">
+    <div class="overlay-panel" id="overlayPanel">
+      <div class="overlay-title" id="overlayTitle">Overlay</div>
+      <div class="overlay-subtitle" id="overlaySubtitle">Choose an option.</div>
+      <div class="overlay-buttons" id="overlayButtons"></div>
+      <div class="overlay-footer">
+        <button id="overlayCloseButton">Close</button>
       </div>
     </div>
   </div>
@@ -664,10 +702,14 @@
     const behButtons = document.querySelectorAll(".beh-btn");
     const slideTabs = document.querySelectorAll(".slide-tab");
 
-    const bottomPanel = document.getElementById("bottomPanel");
-    const bottomToggleButton = document.getElementById("bottomToggleButton");
-    const bottomButtons = document.querySelectorAll(".bottom-btn");
-    const bottomLog = document.getElementById("bottomLog");
+    const overlayBackdrop = document.getElementById("overlayBackdrop");
+    const overlayPanel = document.getElementById("overlayPanel");
+    const overlayTitle = document.getElementById("overlayTitle");
+    const overlaySubtitle = document.getElementById("overlaySubtitle");
+    const overlayButtons = document.getElementById("overlayButtons");
+    const overlayCloseButton = document.getElementById("overlayCloseButton");
+    const toiletOverlayButton = document.getElementById("toiletOverlayButton");
+    const uniformOverlayButton = document.getElementById("uniformOverlayButton");
 
     const noteModalBackdrop = document.getElementById("noteModalBackdrop");
     const noteModalText = document.getElementById("noteModalText");
@@ -731,7 +773,6 @@
       slideTitle.textContent = "No seat selected";
       slideSubtitle.textContent = "Select a seat to view behaviour, notes and SEN.";
       behaviourLog.textContent = "No events yet.";
-      bottomLog.textContent = "No quick flags yet.";
     }
 
     async function loadGridFromFirestore() {
@@ -775,7 +816,6 @@
       slideTitle.textContent = seat.name ? `Seat ${idx + 1} – ${seat.name}` : `Seat ${idx + 1}`;
       slideSubtitle.textContent = "Use behaviour buttons and notes for this seat.";
       renderBehaviourLogForSeat();
-      renderBottomLogForSeat();
       slidePanel.classList.add("open");
       slideToggleButton.textContent = "◀ Behaviour panel";
     }
@@ -792,7 +832,7 @@
       const name = seatStudentName.value.trim();
       const notes = seatNotes.value.trim();
       const idx = currentSeatIndex;
-      const seat = localSeats[idx] || { behaviours: [], quickFlags: [], sen: "", qa: "" };
+      const seat = localSeats[idx] || { behaviours: [], quickFlags: [] };
       seat.name = name || "";
       seat.notes = notes || "";
       localSeats[idx] = seat;
@@ -801,7 +841,6 @@
       seatStatus.textContent = "Seat saved.";
       slideTitle.textContent = name ? `Seat ${idx + 1} – ${name}` : `Seat ${idx + 1}`;
       renderBehaviourLogForSeat();
-      renderBottomLogForSeat();
     });
 
     clearSeatButton.addEventListener("click", async () => {
@@ -822,7 +861,6 @@
       seatStatus.textContent = "Seat cleared.";
       slideTitle.textContent = `Seat ${idx + 1}`;
       behaviourLog.textContent = "No events yet.";
-      bottomLog.textContent = "No quick flags yet.";
     });
 
     resetGridButton.addEventListener("click", async () => {
@@ -838,7 +876,6 @@
       seatStatus.textContent = "Grid cleared.";
       slideTitle.textContent = "No seat selected";
       behaviourLog.textContent = "No events yet.";
-      bottomLog.textContent = "No quick flags yet.";
       await saveGridToFirestore();
     });
 
@@ -858,14 +895,27 @@
         if (!currentUser) return;
         const idx = currentSeatIndex;
         const tag = btn.getAttribute("data-tag");
-        const seat = localSeats[idx] || { behaviours: [], quickFlags: [], sen: "", qa: "" };
-        const behaviours = seat.behaviours || [];
-        behaviours.push({ tag, timestamp: new Date().toISOString() });
-        seat.behaviours = behaviours;
+        const seat = localSeats[idx] || { behaviours: [], quickFlags: [] };
+        const behaviours = seat.behaviours || seat.behaviours === undefined ? seat.behaviours : seat.behaviours;
+        // normalise property
+        const list = seat.behaviours || seat.behaviours === undefined ? seat.behaviours : seat.behaviours;
+      });
+    });
+
+    // Fix behaviour saving properly
+    behButtons.forEach(btn => {
+      btn.onclick = async () => {
+        if (currentSeatIndex === null) return;
+        if (!currentUser) return;
+        const idx = currentSeatIndex;
+        const tag = btn.getAttribute("data-tag");
+        const seat = localSeats[idx] || { behaviours: [], quickFlags: [] };
+        if (!seat.behaviours) seat.behaviours = [];
+        seat.behaviours.push({ tag, timestamp: new Date().toISOString() });
         localSeats[idx] = seat;
         await saveGridToFirestore();
         renderBehaviourLogForSeat();
-      });
+      };
     });
 
     slideTabs.forEach(tab => {
@@ -897,44 +947,65 @@
       behaviourLog.textContent = lines.join("\n");
     }
 
-    bottomToggleButton.addEventListener("click", () => {
-      if (bottomPanel.classList.contains("open")) {
-        bottomPanel.classList.remove("open");
-      } else {
-        bottomPanel.classList.add("open");
+    function openOverlay(type) {
+      if (currentSeatIndex === null) return;
+      overlayButtons.innerHTML = "";
+      if (type === "toilet") {
+        overlayTitle.textContent = "Toilet pass";
+        overlaySubtitle.textContent = "Choose pass or no pass for this student.";
+        const passBtn = document.createElement("button");
+        passBtn.className = "overlay-btn";
+        passBtn.textContent = "Pass";
+        passBtn.onclick = () => addQuickFlag("Toilet – Pass");
+        const noPassBtn = document.createElement("button");
+        noPassBtn.className = "overlay-btn";
+        noPassBtn.textContent = "No Pass";
+        noPassBtn.onclick = () => addQuickFlag("Toilet – No Pass");
+        overlayButtons.appendChild(passBtn);
+        overlayButtons.appendChild(noPassBtn);
+      } else if (type === "uniform") {
+        overlayTitle.textContent = "Uniform check";
+        overlaySubtitle.textContent = "Mark which uniform items are an issue.";
+        ["Tie", "Blazer", "Shoes"].forEach(item => {
+          const btn = document.createElement("button");
+          btn.className = "overlay-btn";
+          btn.textContent = item;
+          btn.onclick = () => addQuickFlag("Uniform – " + item);
+          overlayButtons.appendChild(btn);
+        });
       }
-    });
-
-    bottomButtons.forEach(btn => {
-      btn.addEventListener("click", async () => {
-        if (currentSeatIndex === null) return;
-        if (!currentUser) return;
-        const idx = currentSeatIndex;
-        const tag = btn.getAttribute("data-tag");
-        const seat = localSeats[idx] || { behaviours: [], quickFlags: [], sen: "", qa: "" };
-        const quickFlags = seat.quickFlags || [];
-        quickFlags.push({ tag, timestamp: new Date().toISOString() });
-        seat.quickFlags = quickFlags;
-        localSeats[idx] = seat;
-        await saveGridToFirestore();
-        renderBottomLogForSeat();
-      });
-    });
-
-    function renderBottomLogForSeat() {
-      if (currentSeatIndex === null) {
-        bottomLog.textContent = "No quick flags yet.";
-        return;
-      }
-      const seat = localSeats[currentSeatIndex] || {};
-      const quickFlags = seat.quickFlags || [];
-      if (!quickFlags.length) {
-        bottomLog.textContent = "No quick flags yet.";
-        return;
-      }
-      const lines = quickFlags.map(f => `[FLAG] ${f.timestamp} – ${f.tag}`);
-      bottomLog.textContent = lines.join("\n");
+      overlayBackdrop.style.display = "block";
+      overlayPanel.classList.add("open");
     }
+
+    async function addQuickFlag(tag) {
+      if (currentSeatIndex === null) return;
+      if (!currentUser) return;
+      const idx = currentSeatIndex;
+      const seat = localSeats[idx] || { behaviours: [], quickFlags: [] };
+      if (!seat.quickFlags) seat.quickFlags = [];
+      seat.quickFlags.push({ tag, timestamp: new Date().toISOString() });
+      localSeats[idx] = seat;
+      await saveGridToFirestore();
+      overlayBackdrop.style.display = "none";
+      overlayPanel.classList.remove("open");
+      renderBehaviourLogForSeat();
+    }
+
+    overlayCloseButton.addEventListener("click", () => {
+      overlayBackdrop.style.display = "none";
+      overlayPanel.classList.remove("open");
+    });
+
+    overlayBackdrop.addEventListener("click", (e) => {
+      if (e.target === overlayBackdrop) {
+        overlayBackdrop.style.display = "none";
+        overlayPanel.classList.remove("open");
+      }
+    });
+
+    toiletOverlayButton.addEventListener("click", () => openOverlay("toilet"));
+    uniformOverlayButton.addEventListener("click", () => openOverlay("uniform"));
 
     openNoteModalButton.addEventListener("click", () => {
       if (currentSeatIndex === null) return;
@@ -953,7 +1024,7 @@
       noteModalBackdrop.style.display = "none";
       if (!text) return;
       const idx = currentSeatIndex;
-      const seat = localSeats[idx] || { behaviours: [], quickFlags: [], sen: "", qa: "" };
+      const seat = localSeats[idx] || { behaviours: [], quickFlags: [] };
       seat.notes = seat.notes ? (seat.notes + "\n" + text) : text;
       localSeats[idx] = seat;
       await saveGridToFirestore();
