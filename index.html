@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>v8cloud – Behaviour & Classes (V7 Hybrid Modern Compact)</title>
+  <title>v8cloud – V6 Sliding Panels (10×10)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Firebase v9 compat -->
@@ -61,21 +61,6 @@
       align-items: center;
       gap: 10px;
     }
-    .role-select {
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid #d1d5db;
-      background: #f9fafb;
-      color: #111827;
-      font-size: 0.8rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .role-select span {
-      color: #6b7280;
-    }
     .user-pill {
       padding: 6px 10px;
       border-radius: 999px;
@@ -98,9 +83,10 @@
     }
     .main-layout {
       display: grid;
-      grid-template-columns: 240px 1fr;
+      grid-template-columns: 260px 1fr;
       min-height: 620px;
       background: #f3f4f6;
+      position: relative;
     }
     .sidebar {
       border-right: 1px solid #e5e7eb;
@@ -115,30 +101,6 @@
       font-size: 0.85rem;
       color: #6b7280;
       font-weight: 500;
-    }
-    .nav-button {
-      width: 100%;
-      text-align: left;
-      padding: 7px 9px;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      background: #ffffff;
-      color: #111827;
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
-    .nav-button.active {
-      border-color: #3b82f6;
-      background: #eff6ff;
-      color: #1d4ed8;
-      font-weight: 500;
-    }
-    .content {
-      padding: 12px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      position: relative;
     }
     .panel {
       border-radius: 10px;
@@ -156,12 +118,6 @@
       font-size: 0.8rem;
       color: #6b7280;
       margin-bottom: 8px;
-    }
-    .login-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 6px;
     }
     .btn {
       border-radius: 999px;
@@ -200,7 +156,7 @@
       gap: 6px;
       margin-top: 6px;
     }
-    .input-row input, .input-row select, .input-row textarea {
+    .input-row input, .input-row textarea {
       flex: 1;
       min-width: 140px;
       padding: 6px 8px;
@@ -219,252 +175,38 @@
       color: #6b7280;
       margin-top: 6px;
     }
-    .classes-list {
+
+    .content {
+      padding: 12px 16px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      margin-top: 6px;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
     }
-    .class-item {
+
+    /* Seating grid 10×10 */
+    .seating-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .seating-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 7px 9px;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      font-size: 0.85rem;
-    }
-    .class-item span {
-      color: #111827;
-    }
-    .class-item small {
-      color: #6b7280;
-      font-size: 0.75rem;
-    }
-    .class-item button {
-      font-size: 0.75rem;
-    }
-    .behaviour-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
-      margin-top: 8px;
+      flex-wrap: wrap;
     }
-    .beh-card {
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 0.85rem;
-    }
-    .beh-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .beh-label {
-      font-weight: 600;
-      color: #111827;
-    }
-    .beh-count {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: #1f2937;
-    }
-    .beh-buttons {
-      display: flex;
-      gap: 6px;
-    }
-    .beh-buttons button {
-      flex: 1;
-      padding: 6px 8px;
-      border-radius: 999px;
-      border: 1px solid #d1d5db;
-      background: #ffffff;
-      color: #111827;
-      font-size: 0.75rem;
-      cursor: pointer;
-    }
-    .beh-buttons button.inc {
-      border-color: #f97316;
-      background: #f97316;
-      color: #ffffff;
-    }
-    .beh-buttons button.dec {
-      border-color: #9ca3af;
-      background: #f3f4f6;
-    }
-    .students-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-top: 6px;
-    }
-    .student-item {
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      padding: 7px 9px;
-      font-size: 0.85rem;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .student-main {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .student-main span {
-      color: #111827;
-    }
-    .student-main small {
-      color: #6b7280;
-      font-size: 0.75rem;
-    }
-    .student-actions {
+    .seating-header-left {
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
-    .student-actions button {
-      font-size: 0.75rem;
-    }
-    .export-area {
-      margin-top: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .export-output {
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      padding: 7px;
-      font-size: 0.75rem;
-      color: #4b5563;
-      max-height: 200px;
-      overflow-y: auto;
-      white-space: pre;
-    }
-    .role-modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(17,24,39,0.25);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 50;
-    }
-    .role-modal {
-      width: 100%;
-      max-width: 560px;
-      background: #ffffff;
-      border-radius: 12px;
-      border: 1px solid #e5e7eb;
-      padding: 14px 16px;
-      box-shadow: 0 20px 40px rgba(15,23,42,0.15);
-    }
-    .role-modal h2 {
-      margin: 0 0 6px 0;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #111827;
-    }
-    .role-modal p {
-      margin: 0 0 8px 0;
-      font-size: 0.8rem;
-      color: #6b7280;
-    }
-    .role-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-top: 6px;
-      max-height: 240px;
-      overflow-y: auto;
-    }
-    .role-chip {
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      padding: 7px 9px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .role-chip:hover {
-      border-color: #3b82f6;
-      background: #eff6ff;
-    }
-    .role-chip-title {
-      font-weight: 600;
-      color: #111827;
-    }
-    .role-chip-desc {
-      font-size: 0.8rem;
-      color: #6b7280;
-    }
-    .role-modal-footer {
-      margin-top: 8px;
-      font-size: 0.8rem;
-      color: #6b7280;
-    }
-    .disabled-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(243,244,246,0.8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      pointer-events: none;
-      z-index: 40;
-    }
-    .disabled-overlay span {
-      background: #ffffff;
-      border-radius: 999px;
-      border: 1px solid #f97316;
-      padding: 7px 12px;
-      font-size: 0.8rem;
-      color: #b45309;
-    }
-
-    /* Seating plan V7-style */
-    .seating-layout {
-      display: grid;
-      grid-template-columns: 2fr 1.2fr;
-      gap: 10px;
-      margin-top: 8px;
-    }
-    .seating-left {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .seating-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .seating-toolbar button {
-      font-size: 0.75rem;
-    }
-    .seating-top-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      align-items: center;
-    }
     .seating-grid {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 5px;
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+      gap: 4px;
       margin-top: 8px;
     }
     .seat {
@@ -477,10 +219,7 @@
       flex-direction: column;
       gap: 3px;
       cursor: pointer;
-      position: relative;
-    }
-    .seat.empty {
-      opacity: 0.6;
+      min-height: 40px;
     }
     .seat span {
       color: #111827;
@@ -489,77 +228,92 @@
       color: #6b7280;
       font-size: 0.7rem;
     }
-    .seating-add-panel {
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      padding: 8px;
+    .seat.empty {
+      opacity: 0.7;
+    }
+
+    /* Sliding panels */
+    .slide-toggle {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      z-index: 20;
+    }
+    .slide-toggle button {
+      border-radius: 999px 0 0 999px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #111827;
+      padding: 6px 10px;
       font-size: 0.8rem;
+      cursor: pointer;
+      box-shadow: -2px 0 6px rgba(15,23,42,0.1);
+    }
+
+    .slide-panel {
+      position: absolute;
+      top: 0;
+      right: -320px;
+      width: 320px;
+      height: 100%;
+      background: #ffffff;
+      border-left: 1px solid #e5e7eb;
+      box-shadow: -4px 0 12px rgba(15,23,42,0.12);
+      padding: 10px 12px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
+      transition: right 0.25s ease;
+      z-index: 15;
+      font-size: 0.8rem;
     }
-    .seating-add-panel h4 {
-      margin: 0;
-      font-size: 0.85rem;
+    .slide-panel.open {
+      right: 0;
+    }
+    .slide-panel h3 {
+      margin: 0 0 4px 0;
+      font-size: 0.9rem;
       font-weight: 600;
       color: #111827;
     }
-    .seating-right {
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      padding: 8px;
+    .slide-section-title {
       font-size: 0.8rem;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .seating-right h4 {
-      margin: 0;
-      font-size: 0.85rem;
       font-weight: 600;
       color: #111827;
-    }
-    .beh-panel-section {
       margin-top: 4px;
-    }
-    .beh-panel-section-title {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #111827;
       margin-bottom: 4px;
     }
-    .beh-panel-buttons {
+    .beh-buttons-row {
       display: flex;
       flex-wrap: wrap;
       gap: 4px;
     }
-    .beh-tag-btn {
+    .beh-btn {
       border-radius: 999px;
       border: 1px solid #d1d5db;
-      background: #ffffff;
+      background: #f9fafb;
       color: #111827;
       padding: 4px 8px;
       font-size: 0.7rem;
       cursor: pointer;
     }
-    .beh-tag-btn.positive {
+    .beh-btn.pos {
       border-color: #22c55e;
       background: #dcfce7;
       color: #166534;
     }
-    .beh-tag-btn.negative {
+    .beh-btn.neg {
       border-color: #ef4444;
       background: #fee2e2;
       color: #991b1b;
     }
-    .beh-panel-tabs {
+    .slide-tabs {
       display: flex;
       gap: 4px;
       margin-top: 4px;
     }
-    .beh-tab {
+    .slide-tab {
       border-radius: 999px;
       border: 1px solid #d1d5db;
       background: #ffffff;
@@ -568,22 +322,76 @@
       font-size: 0.7rem;
       cursor: pointer;
     }
-    .beh-tab.active {
+    .slide-tab.active {
       border-color: #3b82f6;
       background: #eff6ff;
       color: #1d4ed8;
     }
-    .beh-log {
+    .slide-log {
       border-radius: 6px;
       border: 1px solid #e5e7eb;
-      background: #ffffff;
+      background: #f9fafb;
       padding: 6px;
       font-size: 0.75rem;
       max-height: 160px;
       overflow-y: auto;
+      white-space: pre-wrap;
     }
 
-    /* Add Note modal */
+    /* Toilet / Uniform panel */
+    .bottom-panel-toggle {
+      position: absolute;
+      bottom: 0;
+      right: 340px;
+      z-index: 20;
+    }
+    .bottom-panel-toggle button {
+      border-radius: 999px 999px 0 0;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #111827;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      box-shadow: 0 -2px 6px rgba(15,23,42,0.1);
+    }
+    .bottom-panel {
+      position: absolute;
+      bottom: -140px;
+      right: 0;
+      width: 320px;
+      height: 140px;
+      background: #ffffff;
+      border-top: 1px solid #e5e7eb;
+      border-left: 1px solid #e5e7eb;
+      box-shadow: -4px -4px 12px rgba(15,23,42,0.12);
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: bottom 0.25s ease;
+      z-index: 14;
+      font-size: 0.8rem;
+    }
+    .bottom-panel.open {
+      bottom: 0;
+    }
+    .bottom-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .bottom-btn {
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      color: #111827;
+      padding: 4px 8px;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+
+    /* Note modal */
     .note-modal-backdrop {
       position: fixed;
       inset: 0;
@@ -625,13 +433,10 @@
   <div class="app-shell">
     <div class="top-bar">
       <div class="top-left">
-        <h1>v8cloud – Behaviour & Classes</h1>
-        <div class="subtitle">Role: <span id="roleSubtitleText">Not selected</span></div>
+        <h1>v8cloud – V6 Sliding Panels</h1>
+        <div class="subtitle" id="subtitleText">Sign in to start.</div>
       </div>
       <div class="top-right">
-        <button class="role-select" id="roleSelectButton">
-          <span>Role:</span> <strong id="roleSelectLabel">Tap to choose</strong>
-        </button>
         <div class="user-pill" id="userPill" style="display:none;">
           <span id="userEmail"></span>
           <button id="logoutButton">Sign out</button>
@@ -641,291 +446,125 @@
 
     <div class="main-layout">
       <div class="sidebar">
-        <h2>Navigation</h2>
-        <button class="nav-button active" data-target="classesPanel">Classes</button>
-        <button class="nav-button" data-target="seatingPanel">Seating plan</button>
-        <button class="nav-button" data-target="behaviourPanel">Behaviour</button>
-        <button class="nav-button" data-target="studentsPanel">Students</button>
-        <button class="nav-button" data-target="exportPanel">Export / Logs</button>
-
-        <div class="panel" style="margin-top:10px;">
-          <h3>Authentication</h3>
-          <div class="panel-subtitle">Sign in to link data to your account.</div>
-          <div class="login-buttons">
+        <h2>Authentication</h2>
+        <div class="panel">
+          <h3>Sign in</h3>
+          <div class="panel-subtitle">Link seating and behaviour to your account.</div>
+          <div class="input-row">
             <button class="btn btn-primary" id="googleLoginButton">Continue with Google</button>
-            <button class="btn" id="emailLoginButton">Sign in with email</button>
           </div>
-          <div class="input-row" id="emailInputs" style="display:none;">
+          <div class="input-row">
             <input type="email" id="emailField" placeholder="Email address" />
             <input type="password" id="passwordField" placeholder="Password" />
-            <button class="btn btn-primary" id="emailDoLoginButton">Login / Register</button>
+            <button class="btn btn-secondary" id="emailLoginButton">Email login / register</button>
           </div>
           <div class="status-line" id="authStatus">Not signed in.</div>
         </div>
+
+        <h2 style="margin-top:10px;">Seat tools</h2>
+        <div class="panel">
+          <h3>Assign student to seat</h3>
+          <div class="panel-subtitle">Click a seat, then type a name and save.</div>
+          <div class="input-row">
+            <input type="text" id="seatStudentName" placeholder="Student name" />
+          </div>
+          <div class="input-row">
+            <textarea id="seatNotes" placeholder="Notes (SEN, behaviour, pastoral, etc.)"></textarea>
+          </div>
+          <div class="input-row">
+            <button class="btn btn-primary" id="saveSeatButton">Save to selected seat</button>
+            <button class="btn btn-danger" id="clearSeatButton">Clear selected seat</button>
+          </div>
+          <div class="status-line" id="seatStatus">No seat selected.</div>
+        </div>
       </div>
 
-      <div class="content" id="contentArea">
-        <!-- CLASSES -->
-        <div class="panel" id="classesPanel">
-          <h3>Classes</h3>
-          <div class="panel-subtitle">
-            Manage your classes. Each class can have its own seating plan and behaviour context.
+      <div class="content">
+        <div class="seating-wrapper">
+          <div class="seating-header">
+            <div class="seating-header-left">
+              <div style="font-size:0.9rem;font-weight:600;color:#111827;">Seating plan – 10×10 grid</div>
+              <div class="panel-subtitle" id="gridSubtitle">Click a seat to open the behaviour panel.</div>
+            </div>
+            <div>
+              <button class="btn btn-secondary" id="resetGridButton">Clear entire grid</button>
+            </div>
           </div>
-          <div class="input-row">
-            <input type="text" id="newClassName" placeholder="Class name (e.g., 9A Maths)" />
-            <input type="text" id="newClassRoom" placeholder="Room (e.g., B12)" />
-            <select id="newClassYear">
-              <option value="">Year group (optional)</option>
-              <option>Year 7</option>
-              <option>Year 8</option>
-              <option>Year 9</option>
-              <option>Year 10</option>
-              <option>Year 11</option>
-              <option>Sixth Form</option>
-            </select>
-            <button class="btn btn-primary" id="addClassButton">Add class</button>
-          </div>
-          <div class="classes-list" id="classesList"></div>
-          <div class="status-line" id="classesStatus">No classes yet.</div>
+
+          <div class="seating-grid" id="seatingGrid"></div>
         </div>
 
-        <!-- SEATING -->
-        <div class="panel" id="seatingPanel" style="display:none;">
-          <h3>Seating plan</h3>
-          <div class="panel-subtitle">
-            Click a class to open its seating layout. Layouts can be Custom, Diagonal, Horizontal, or Both.
-          </div>
-
-          <div class="seating-layout">
-            <div class="seating-left">
-              <div class="seating-top-row">
-                <select id="seatingClassSelect">
-                  <option value="">Select class for seating</option>
-                </select>
-                <select id="seatingLayoutSelect">
-                  <option value="custom">Custom (empty)</option>
-                  <option value="diagonal">Diagonal (12 desks)</option>
-                  <option value="horizontal">Horizontal (10 desks)</option>
-                  <option value="both">Both layouts</option>
-                </select>
-                <button class="btn btn-secondary" id="resetSeatingButton">Clear seating layout</button>
-              </div>
-
-              <div class="seating-toolbar">
-                <button class="btn btn-secondary" id="roomButton">Room</button>
-                <button class="btn btn-secondary" id="awardMultipleButton">Award multiple</button>
-                <button class="btn btn-secondary" id="attendanceButton">Attendance</button>
-                <button class="btn btn-secondary" id="randomPupilButton">Random pupil</button>
-                <button class="btn btn-secondary" id="rearrangeButton">Rearrange</button>
-                <button class="btn btn-secondary" id="influencesButton">Influences</button>
-                <button class="btn btn-secondary" id="homeworkButton">Homework</button>
-              </div>
-
-              <div class="seating-add-panel">
-                <h4>Add Student Desk</h4>
-                <div class="input-row">
-                  <input type="text" id="seatImageUrl" placeholder="Profile image URL (optional)" />
-                  <input type="text" id="seatStudentName" placeholder="Student name" />
-                  <select id="seatShapeSelect">
-                    <option value="rectangle">Rectangle</option>
-                  </select>
-                  <button class="btn btn-primary" id="addSeatButton">Add Student Desk</button>
-                </div>
-              </div>
-
-              <div class="seating-grid" id="seatingGrid"></div>
-              <div class="status-line" id="seatingStatus">Choose a class to manage seating.</div>
-            </div>
-
-            <div class="seating-right">
-              <h4 id="seatingRightTitle">No desk selected</h4>
-
-              <div class="beh-panel-section">
-                <div class="beh-panel-section-title">Positive</div>
-                <div class="beh-panel-buttons">
-                  <button class="beh-tag-btn positive" data-tag="P1 (+1)">P1 (+1)</button>
-                  <button class="beh-tag-btn positive" data-tag="P2 (+2)">P2 (+2)</button>
-                  <button class="beh-tag-btn positive" data-tag="P3 (+3)">P3 (+3)</button>
-                  <button class="beh-tag-btn positive" data-tag="P4 (+4)">P4 (+4)</button>
-                  <button class="beh-tag-btn positive" data-tag="Star Student (+10)">Star Student (+10)</button>
-                  <button class="beh-tag-btn positive" data-tag="Year 11 (+1)">Year 11 (+1)</button>
-                  <button class="beh-tag-btn positive" data-tag="Book Presentation (+2)">Book Presentation (+2)</button>
-                  <button class="beh-tag-btn positive" data-tag="Great Uniform (+1)">Great Uniform (+1)</button>
-                  <button class="beh-tag-btn positive" data-tag="Attendance Positive (+1)">Attendance Positive (+1)</button>
-                  <button class="beh-tag-btn positive" data-tag="Politeness (+1)">Politeness (+1)</button>
-                </div>
-              </div>
-
-              <div class="beh-panel-section">
-                <div class="beh-panel-section-title">Negative</div>
-                <div class="beh-panel-buttons">
-                  <button class="beh-tag-btn negative" data-tag="C2">C2</button>
-                  <button class="beh-tag-btn negative" data-tag="C3">C3</button>
-                  <button class="beh-tag-btn negative" data-tag="C4">C4</button>
-                  <button class="beh-tag-btn negative" data-tag="Late">Late</button>
-                  <button class="beh-tag-btn negative" data-tag="Truancy">Truancy</button>
-                  <button class="beh-tag-btn negative" data-tag="Physical">Physical</button>
-                  <button class="beh-tag-btn negative" data-tag="MIA (0)">MIA (0)</button>
-                  <button class="beh-tag-btn negative" data-tag="I Need Support (0)">I Need Support (0)</button>
-                  <button class="beh-tag-btn negative" data-tag="Out of Bounds (-1)">Out of Bounds (-1)</button>
-                  <button class="beh-tag-btn negative" data-tag="Refusal (-1)">Refusal (-1)</button>
-                  <button class="beh-tag-btn negative" data-tag="Bullying (-1)">Bullying (-1)</button>
-                  <button class="beh-tag-btn negative" data-tag="Urgent On Call (0)">Urgent On Call (0)</button>
-                  <button class="beh-tag-btn negative" data-tag="Toilet">Toilet</button>
-                  <button class="beh-tag-btn negative" data-tag="Uniform">Uniform</button>
-                </div>
-              </div>
-
-              <div class="beh-panel-tabs">
-                <button class="beh-tab active" data-tab="sen">SEN</button>
-                <button class="beh-tab" data-tab="notes">Notes</button>
-                <button class="beh-tab" data-tab="qa">Q+A</button>
-              </div>
-
-              <div class="beh-panel-section">
-                <div class="beh-panel-section-title">Behaviour Log</div>
-                <div class="beh-log" id="seatBehaviourLog">No events yet.</div>
-              </div>
-
-              <button class="btn btn-secondary" id="openNoteModalButton">Add Note</button>
-            </div>
-          </div>
+        <!-- Right slide toggle -->
+        <div class="slide-toggle">
+          <button id="slideToggleButton">▶ Behaviour panel</button>
         </div>
 
-        <!-- BEHAVIOUR -->
-        <div class="panel" id="behaviourPanel" style="display:none;">
-          <h3>Behaviour – Live C1 / C2 / C3 / C4</h3>
-          <div class="panel-subtitle">
-            Track live behaviour events. Counts and logs are stored per user in Firestore.
-          </div>
-          <div class="input-row">
-            <select id="behaviourClassSelect">
-              <option value="">Class (optional for context)</option>
-            </select>
-            <select id="behaviourStudentSelect">
-              <option value="">Student (optional)</option>
-            </select>
-            <select id="behaviourStageSelect">
-              <option value="">Stage (C1–C4)</option>
-              <option value="c1">C1 – Warning</option>
-              <option value="c2">C2 – Continued</option>
-              <option value="c3">C3 – Removal (On‑Call)</option>
-              <option value="c4">C4 – Serious / SLT</option>
-            </select>
-            <button class="btn btn-secondary" id="logBehaviourEventButton">Log behaviour event</button>
+        <!-- Right slide panel -->
+        <div class="slide-panel" id="slidePanel">
+          <h3 id="slideTitle">No seat selected</h3>
+          <div class="panel-subtitle" id="slideSubtitle">Select a seat to view behaviour, notes and SEN.</div>
+
+          <div class="slide-section-title">Positive</div>
+          <div class="beh-buttons-row">
+            <button class="beh-btn pos" data-tag="P1 (+1)">P1 (+1)</button>
+            <button class="beh-btn pos" data-tag="P2 (+2)">P2 (+2)</button>
+            <button class="beh-btn pos" data-tag="P3 (+3)">P3 (+3)</button>
+            <button class="beh-btn pos" data-tag="P4 (+4)">P4 (+4)</button>
+            <button class="beh-btn pos" data-tag="Star Student (+10)">Star Student (+10)</button>
+            <button class="beh-btn pos" data-tag="Politeness (+1)">Politeness (+1)</button>
+            <button class="beh-btn pos" data-tag="Attendance (+1)">Attendance (+1)</button>
           </div>
 
-          <div class="behaviour-grid">
-            <div class="beh-card">
-              <div class="beh-header">
-                <span class="beh-label">C1 – Warning</span>
-                <span class="beh-count" id="c1Count">0</span>
-              </div>
-              <div class="beh-buttons">
-                <button class="inc" data-type="c1">+1 C1</button>
-                <button class="dec" data-type="c1">-1</button>
-              </div>
-            </div>
-            <div class="beh-card">
-              <div class="beh-header">
-                <span class="beh-label">C2 – Continued</span>
-                <span class="beh-count" id="c2Count">0</span>
-              </div>
-              <div class="beh-buttons">
-                <button class="inc" data-type="c2">+1 C2</button>
-                <button class="dec" data-type="c2">-1</button>
-              </div>
-            </div>
-            <div class="beh-card">
-              <div class="beh-header">
-                <span class="beh-label">C3 – Removal / On‑Call</span>
-                <span class="beh-count" id="c3Count">0</span>
-              </div>
-              <div class="beh-buttons">
-                <button class="inc" data-type="c3">+1 C3</button>
-                <button class="dec" data-type="c3">-1</button>
-              </div>
-            </div>
-            <div class="beh-card">
-              <div class="beh-header">
-                <span class="beh-label">C4 – Serious / SLT</span>
-                <span class="beh-count" id="c4Count">0</span>
-              </div>
-              <div class="beh-buttons">
-                <button class="inc" data-type="c4">+1 C4</button>
-                <button class="dec" data-type="c4">-1</button>
-              </div>
-            </div>
+          <div class="slide-section-title">Negative</div>
+          <div class="beh-buttons-row">
+            <button class="beh-btn neg" data-tag="C1">C1</button>
+            <button class="beh-btn neg" data-tag="C2">C2</button>
+            <button class="beh-btn neg" data-tag="C3">C3</button>
+            <button class="beh-btn neg" data-tag="C4">C4</button>
+            <button class="beh-btn neg" data-tag="Late">Late</button>
+            <button class="beh-btn neg" data-tag="Truancy">Truancy</button>
+            <button class="beh-btn neg" data-tag="Physical">Physical</button>
+            <button class="beh-btn neg" data-tag="Refusal">Refusal</button>
+            <button class="beh-btn neg" data-tag="Bullying">Bullying</button>
           </div>
-          <div class="status-line" id="behaviourStatus">Behaviour counters and logs are linked to your account.</div>
+
+          <div class="slide-tabs">
+            <button class="slide-tab active" data-tab="sen">SEN</button>
+            <button class="slide-tab" data-tab="notes">Notes</button>
+            <button class="slide-tab" data-tab="qa">Q+A</button>
+          </div>
+
+          <div class="slide-section-title">Behaviour log</div>
+          <div class="slide-log" id="behaviourLog">No events yet.</div>
+
+          <button class="btn btn-secondary" id="openNoteModalButton">Add note to seat</button>
         </div>
 
-        <!-- STUDENTS -->
-        <div class="panel" id="studentsPanel" style="display:none;">
-          <h3>Students</h3>
-          <div class="panel-subtitle">
-            Add student profiles with notes and SEN flags. These can be linked to classes and behaviour.
-          </div>
-          <div class="input-row">
-            <input type="text" id="newStudentName" placeholder="Student name" />
-            <input type="text" id="newStudentId" placeholder="Student ID (optional)" />
-            <select id="newStudentSen">
-              <option value="">SEN status</option>
-              <option>None</option>
-              <option>SEN Support</option>
-              <option>EHCP</option>
-            </select>
-          </div>
-          <div class="input-row">
-            <textarea id="newStudentNotes" placeholder="Notes (behaviour, safeguarding, pastoral, etc.)"></textarea>
-            <button class="btn btn-primary" id="addStudentButton">Add student</button>
-          </div>
-          <div class="students-list" id="studentsList"></div>
-          <div class="status-line" id="studentsStatus">No students yet.</div>
+        <!-- Bottom panel toggle -->
+        <div class="bottom-panel-toggle">
+          <button id="bottomToggleButton">Toilet / Uniform</button>
         </div>
 
-        <!-- EXPORT -->
-        <div class="panel" id="exportPanel" style="display:none;">
-          <h3>Export & Logs</h3>
-          <div class="panel-subtitle">
-            Generate a CSV of behaviour events for SLT, Heads of Year, On‑Call, etc.
+        <!-- Bottom panel -->
+        <div class="bottom-panel" id="bottomPanel">
+          <div style="font-weight:600;color:#111827;">Quick flags</div>
+          <div class="bottom-buttons">
+            <button class="bottom-btn" data-tag="Toilet">Toilet</button>
+            <button class="bottom-btn" data-tag="Uniform">Uniform</button>
+            <button class="bottom-btn" data-tag="Out of Bounds">Out of Bounds</button>
+            <button class="bottom-btn" data-tag="Urgent On Call">Urgent On Call</button>
+            <button class="bottom-btn" data-tag="I Need Support">I Need Support</button>
           </div>
-          <div class="input-row">
-            <button class="btn btn-secondary" id="generateCsvButton">Generate behaviour CSV</button>
-            <button class="btn btn-secondary" id="copyCsvButton">Copy CSV to clipboard</button>
-          </div>
-          <div class="export-area">
-            <div class="export-output" id="csvOutput">No CSV generated yet.</div>
-            <div class="status-line" id="exportStatus">CSV includes timestamp, class, student, stage, role.</div>
-          </div>
-        </div>
-
-        <!-- Blocker until role chosen -->
-        <div class="disabled-overlay" id="roleBlocker">
-          <span>You must choose your role at the top before using v8cloud.</span>
+          <div class="slide-log" id="bottomLog">No quick flags yet.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Role modal -->
-  <div class="role-modal-backdrop" id="roleModal">
-    <div class="role-modal">
-      <h2>Select your role</h2>
-      <p>
-        Choose the role that best matches how you use behaviour and classes. You can still sign in with any account, but your role helps define context.
-      </p>
-      <div class="role-list" id="roleList"></div>
-      <div class="role-modal-footer">
-        You cannot use the app until a role is selected. You can change it later from the top bar.
-      </div>
-    </div>
-  </div>
-
-  <!-- Add Note modal -->
+  <!-- Note modal -->
   <div class="note-modal-backdrop" id="noteModalBackdrop">
     <div class="note-modal">
-      <h3>Add Note</h3>
+      <h3>Add note to seat</h3>
       <textarea id="noteModalText" placeholder="Type note here..."></textarea>
       <div class="note-modal-actions">
         <button class="btn btn-secondary" id="noteCancelButton">Cancel</button>
@@ -949,83 +588,17 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    const roles = [
-      { title: "Class Teacher", desc: "Leads a class, sets expectations, tracks behaviour and learning." },
-      { title: "Head of Department", desc: "Manages whole subject area and standards." },
-      { title: "Subject Lead", desc: "Runs a department subject (e.g., Maths Lead)." },
-      { title: "Head of Year", desc: "Behaviour, attendance, wellbeing for a year group." },
-      { title: "Pastoral Manager", desc: "Supports behaviour & safeguarding." },
-      { title: "Behaviour Mentor", desc: "Works with students who struggle with behaviour." },
-      { title: "Safeguarding Officer", desc: "Handles concerns & protection." },
-      { title: "SLT – Principal / Headteacher", desc: "Runs the whole school." },
-      { title: "SLT – Deputy Headteacher", desc: "Behaviour, curriculum, safeguarding." },
-      { title: "SLT – Assistant Headteacher", desc: "Specific areas (e.g., behaviour)." },
-      { title: "SLT – Associate Assistant Headteacher", desc: "Supports SLT and whole‑school priorities." },
-      { title: "On‑Call Staff", desc: "Responds to C3/C4 removals and serious incidents." }
-    ];
-
-    const roleModal = document.getElementById("roleModal");
-    const roleBlocker = document.getElementById("roleBlocker");
-    const roleList = document.getElementById("roleList");
-    const roleSelectButton = document.getElementById("roleSelectButton");
-    const roleSelectLabel = document.getElementById("roleSelectLabel");
-    const roleSubtitleText = document.getElementById("roleSubtitleText");
-
-    let currentRole = null;
-    let currentUser = null;
-
-    roles.forEach(role => {
-      const div = document.createElement("div");
-      div.className = "role-chip";
-      div.innerHTML = `
-        <div class="role-chip-title">${role.title}</div>
-        <div class="role-chip-desc">${role.desc}</div>
-      `;
-      div.addEventListener("click", () => {
-        currentRole = role.title;
-        roleSelectLabel.textContent = role.title;
-        roleSubtitleText.textContent = role.title;
-        roleModal.style.display = "none";
-        roleBlocker.style.display = "none";
-      });
-      roleList.appendChild(div);
-    });
-
-    roleSelectButton.addEventListener("click", () => {
-      roleModal.style.display = "flex";
-      roleBlocker.style.display = "flex";
-    });
-
-    const navButtons = document.querySelectorAll(".nav-button");
-    const panels = {
-      classesPanel: document.getElementById("classesPanel"),
-      seatingPanel: document.getElementById("seatingPanel"),
-      behaviourPanel: document.getElementById("behaviourPanel"),
-      studentsPanel: document.getElementById("studentsPanel"),
-      exportPanel: document.getElementById("exportPanel"),
-    };
-
-    navButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        navButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        const target = btn.getAttribute("data-target");
-        Object.keys(panels).forEach(key => {
-          panels[key].style.display = key === target ? "block" : "none";
-        });
-      });
-    });
-
-    const googleLoginButton = document.getElementById("googleLoginButton");
-    const emailLoginButton = document.getElementById("emailLoginButton");
-    const emailInputs = document.getElementById("emailInputs");
-    const emailField = document.getElementById("emailField");
-    const passwordField = document.getElementById("passwordField");
-    const emailDoLoginButton = document.getElementById("emailDoLoginButton");
-    const authStatus = document.getElementById("authStatus");
+    const subtitleText = document.getElementById("subtitleText");
     const userPill = document.getElementById("userPill");
     const userEmailSpan = document.getElementById("userEmail");
     const logoutButton = document.getElementById("logoutButton");
+    const googleLoginButton = document.getElementById("googleLoginButton");
+    const emailField = document.getElementById("emailField");
+    const passwordField = document.getElementById("passwordField");
+    const emailLoginButton = document.getElementById("emailLoginButton");
+    const authStatus = document.getElementById("authStatus");
+
+    let currentUser = null;
 
     googleLoginButton.addEventListener("click", async () => {
       try {
@@ -1037,11 +610,7 @@
       }
     });
 
-    emailLoginButton.addEventListener("click", () => {
-      emailInputs.style.display = emailInputs.style.display === "none" ? "flex" : "none";
-    });
-
-    emailDoLoginButton.addEventListener("click", async () => {
+    emailLoginButton.addEventListener("click", async () => {
       const email = emailField.value.trim();
       const password = passwordField.value.trim();
       if (!email || !password) {
@@ -1055,7 +624,7 @@
           try {
             await auth.createUserWithEmailAndPassword(email, password);
           } catch (err2) {
-            authStatus.textContent = "Email register error: " + err2.message;
+            authStatus.textContent = "Register error: " + err2.message;
             return;
           }
         } else {
@@ -1069,371 +638,56 @@
       await auth.signOut();
     });
 
-    const c1CountSpan = document.getElementById("c1Count");
-    const c2CountSpan = document.getElementById("c2Count");
-    const c3CountSpan = document.getElementById("c3Count");
-    const c4CountSpan = document.getElementById("c4Count");
-    const behaviourStatus = document.getElementById("behaviourStatus");
-    const behaviourButtons = document.querySelectorAll(".beh-buttons button");
-    const behaviourClassSelect = document.getElementById("behaviourClassSelect");
-    const behaviourStudentSelect = document.getElementById("behaviourStudentSelect");
-    const behaviourStageSelect = document.getElementById("behaviourStageSelect");
-    const logBehaviourEventButton = document.getElementById("logBehaviourEventButton");
-
-    let behaviourCountersUnsub = null;
-
-    behaviourButtons.forEach(btn => {
-      btn.addEventListener("click", async () => {
-        if (!currentUser) {
-          behaviourStatus.textContent = "Sign in to track behaviour.";
-          return;
-        }
-        if (!currentRole) {
-          behaviourStatus.textContent = "Choose your role before logging behaviour.";
-          return;
-        }
-        const type = btn.getAttribute("data-type");
-        const isInc = btn.classList.contains("inc");
-        const delta = isInc ? 1 : -1;
-        await updateBehaviourCount(type, delta);
-      });
-    });
-
-    async function updateBehaviourCount(type, delta) {
-      try {
-        const docRef = db.collection("users").doc(currentUser.uid).collection("behaviourCounters").doc("main");
-        const snap = await docRef.get();
-        const data = snap.exists ? snap.data() : { c1: 0, c2: 0, c3: 0, c4: 0, role: currentRole || null };
-        const key = type;
-        let newVal = (data[key] || 0) + delta;
-        if (newVal < 0) newVal = 0;
-        data[key] = newVal;
-        data.role = currentRole || data.role;
-        await docRef.set(data);
-        behaviourStatus.textContent = "Behaviour updated (" + type.toUpperCase() + ").";
-      } catch (err) {
-        console.error(err);
-        behaviourStatus.textContent = "Behaviour error: " + err.message;
-      }
-    }
-
-    logBehaviourEventButton.addEventListener("click", async () => {
-      if (!currentUser) {
-        behaviourStatus.textContent = "Sign in to log behaviour.";
-        return;
-      }
-      if (!currentRole) {
-        behaviourStatus.textContent = "Choose your role before logging behaviour.";
-        return;
-      }
-      const stage = behaviourStageSelect.value;
-      if (!stage) {
-        behaviourStatus.textContent = "Select a behaviour stage (C1–C4).";
-        return;
-      }
-      const cls = behaviourClassSelect.value || "";
-      const student = behaviourStudentSelect.value || "";
-      const now = new Date();
-      try {
-        const docRef = db.collection("users").doc(currentUser.uid).collection("behaviourLogs").doc();
-        await docRef.set({
-          stage,
-          className: cls,
-          studentName: student,
-          role: currentRole,
-          timestamp: now.toISOString(),
-        });
-        behaviourStatus.textContent = "Behaviour event logged.";
-      } catch (err) {
-        console.error(err);
-        behaviourStatus.textContent = "Log error: " + err.message;
+    auth.onAuthStateChanged(user => {
+      currentUser = user;
+      if (user) {
+        userPill.style.display = "flex";
+        userEmailSpan.textContent = user.email || "Signed in";
+        authStatus.textContent = "Signed in as " + (user.email || "user");
+        subtitleText.textContent = "Click a seat to start logging behaviour.";
+        loadGridFromFirestore();
+      } else {
+        userPill.style.display = "none";
+        userEmailSpan.textContent = "";
+        authStatus.textContent = "Not signed in.";
+        subtitleText.textContent = "Sign in to start.";
+        clearLocalGrid();
       }
     });
 
-    function attachBehaviourListener() {
-      if (!currentUser) return;
-      const docRef = db.collection("users").doc(currentUser.uid).collection("behaviourCounters").doc("main");
-      behaviourCountersUnsub = docRef.onSnapshot(snap => {
-        const data = snap.data() || { c1: 0, c2: 0, c3: 0, c4: 0 };
-        c1CountSpan.textContent = data.c1 || 0;
-        c2CountSpan.textContent = data.c2 || 0;
-        c3CountSpan.textContent = data.c3 || 0;
-        c4CountSpan.textContent = data.c4 || 0;
-      }, err => {
-        console.error(err);
-        behaviourStatus.textContent = "Live counters error: " + err.message;
-      });
-    }
-
-    // CLASSES
-    const newClassName = document.getElementById("newClassName");
-    const newClassRoom = document.getElementById("newClassRoom");
-    const newClassYear = document.getElementById("newClassYear");
-    const addClassButton = document.getElementById("addClassButton");
-    const classesList = document.getElementById("classesList");
-    const classesStatus = document.getElementById("classesStatus");
-    const seatingClassSelect = document.getElementById("seatingClassSelect");
-
-    let localClasses = [];
-
-    function renderClassesInstant() {
-      classesList.innerHTML = "";
-      seatingClassSelect.innerHTML = '<option value="">Select class for seating</option>';
-      behaviourClassSelect.innerHTML = '<option value="">Class (optional for context)</option>';
-
-      if (localClasses.length === 0) {
-        classesStatus.textContent = "No classes yet.";
-        return;
-      }
-
-      localClasses.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "class-item";
-        div.innerHTML = `
-          <div>
-            <span>${item.name}</span><br/>
-            <small>${item.room || "No room"}${item.year ? " • " + item.year : ""}</small>
-          </div>
-          <div>
-            <button class="btn btn-secondary" data-id="${item.id}" data-action="select">Use</button>
-            <button class="btn btn-danger" data-id="${item.id}" data-action="remove">Remove</button>
-          </div>
-        `;
-
-        const buttons = div.querySelectorAll("button");
-        buttons.forEach(b => {
-          const id = b.getAttribute("data-id");
-          const action = b.getAttribute("data-action");
-
-          if (action === "remove") {
-            b.addEventListener("click", () => {
-              localClasses = localClasses.filter(c => c.id !== id);
-              renderClassesInstant();
-              if (currentUser) {
-                db.collection("users").doc(currentUser.uid)
-                  .collection("classes").doc(id).delete().catch(err => console.error("Delete error:", err));
-              }
-            });
-          } else {
-            b.addEventListener("click", () => {
-              seatingClassSelect.value = item.name;
-              behaviourClassSelect.value = item.name;
-              classesStatus.textContent = "Selected class: " + item.name;
-              loadSeatingLayout();
-            });
-          }
-        });
-
-        classesList.appendChild(div);
-
-        const opt1 = document.createElement("option");
-        opt1.value = item.name;
-        opt1.textContent = item.name;
-        seatingClassSelect.appendChild(opt1);
-
-        const opt2 = document.createElement("option");
-        opt2.value = item.name;
-        opt2.textContent = item.name;
-        behaviourClassSelect.appendChild(opt2);
-      });
-
-      classesStatus.textContent = "Classes loaded.";
-    }
-
-    addClassButton.addEventListener("click", () => {
-      if (!currentUser) {
-        classesStatus.textContent = "Sign in to save classes.";
-        return;
-      }
-      if (!currentRole) {
-        classesStatus.textContent = "Choose your role first.";
-        return;
-      }
-
-      const name = newClassName.value.trim();
-      const room = newClassRoom.value.trim();
-      const year = newClassYear.value.trim();
-
-      if (!name) {
-        classesStatus.textContent = "Enter a class name.";
-        return;
-      }
-
-      const id = Date.now().toString();
-      const newClass = { id, name, room, year };
-
-      localClasses.push(newClass);
-      renderClassesInstant();
-
-      db.collection("users").doc(currentUser.uid)
-        .collection("classes").doc(id)
-        .set(newClass)
-        .catch(err => console.error("Save error:", err));
-
-      newClassName.value = "";
-      newClassRoom.value = "";
-      newClassYear.value = "";
-      classesStatus.textContent = "Class added.";
-    });
-
-    function loadClassesOnce() {
-      if (!currentUser) return;
-      db.collection("users").doc(currentUser.uid)
-        .collection("classes")
-        .get()
-        .then(snap => {
-          localClasses = [];
-          snap.forEach(doc => localClasses.push({ id: doc.id, ...doc.data() }));
-          renderClassesInstant();
-        })
-        .catch(err => {
-          console.error(err);
-          classesStatus.textContent = "Load classes error: " + err.message;
-        });
-    }
-
-    // STUDENTS
-    const newStudentName = document.getElementById("newStudentName");
-    const newStudentId = document.getElementById("newStudentId");
-    const newStudentSen = document.getElementById("newStudentSen");
-    const newStudentNotes = document.getElementById("newStudentNotes");
-    const addStudentButton = document.getElementById("addStudentButton");
-    const studentsList = document.getElementById("studentsList");
-    const studentsStatus = document.getElementById("studentsStatus");
-
-    let studentsUnsub = null;
-
-    addStudentButton.addEventListener("click", async () => {
-      if (!currentUser) {
-        studentsStatus.textContent = "Sign in to save students.";
-        return;
-      }
-      if (!currentRole) {
-        studentsStatus.textContent = "Choose your role before managing students.";
-        return;
-      }
-      const name = newStudentName.value.trim();
-      const sid = newStudentId.value.trim();
-      const sen = newStudentSen.value.trim();
-      const notes = newStudentNotes.value.trim();
-      if (!name) {
-        studentsStatus.textContent = "Enter a student name.";
-        return;
-      }
-      try {
-        const colRef = db.collection("users").doc(currentUser.uid).collection("students");
-        await colRef.add({
-          name,
-          sid: sid || "",
-          sen: sen || "",
-          notes: notes || "",
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-        newStudentName.value = "";
-        newStudentId.value = "";
-        newStudentSen.value = "";
-        newStudentNotes.value = "";
-        studentsStatus.textContent = "Student added.";
-      } catch (err) {
-        console.error(err);
-        studentsStatus.textContent = "Add student error: " + err.message;
-      }
-    });
-
-    function attachStudentsListener() {
-      if (!currentUser) return;
-      const colRef = db.collection("users").doc(currentUser.uid).collection("students").orderBy("createdAt", "asc");
-      studentsUnsub = colRef.onSnapshot(snap => {
-        const items = [];
-        snap.forEach(doc => {
-          items.push({ id: doc.id, ...doc.data() });
-        });
-        renderStudents(items);
-      }, err => {
-        console.error(err);
-        studentsStatus.textContent = "Students error: " + err.message;
-      });
-    }
-
-    function renderStudents(items) {
-      studentsList.innerHTML = "";
-      behaviourStudentSelect.innerHTML = '<option value="">Student (optional)</option>';
-      if (!items.length) {
-        studentsStatus.textContent = "No students yet.";
-        return;
-      }
-      items.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "student-item";
-        div.innerHTML = `
-          <div class="student-main">
-            <span>${item.name}</span>
-            <small>${item.sid || "No ID"}${item.sen ? " • " + item.sen : ""}</small>
-            <small>${item.notes || ""}</small>
-          </div>
-          <div class="student-actions">
-            <button class="btn btn-secondary" data-id="${item.id}" data-action="link">Use in behaviour</button>
-            <button class="btn btn-danger" data-id="${item.id}" data-action="remove">Remove</button>
-          </div>
-        `;
-        const buttons = div.querySelectorAll("button");
-        buttons.forEach(b => {
-          const id = b.getAttribute("data-id");
-          const action = b.getAttribute("data-action");
-          if (action === "remove") {
-            b.addEventListener("click", async () => {
-              if (!currentUser) return;
-              try {
-                const docRef = db.collection("users").doc(currentUser.uid).collection("students").doc(id);
-                await docRef.delete();
-                studentsStatus.textContent = "Student removed.";
-              } catch (err) {
-                console.error(err);
-                studentsStatus.textContent = "Remove error: " + err.message;
-              }
-            });
-          } else {
-            b.addEventListener("click", () => {
-              behaviourStudentSelect.value = item.name;
-              studentsStatus.textContent = "Selected student: " + item.name;
-            });
-          }
-        });
-        studentsList.appendChild(div);
-
-        const opt = document.createElement("option");
-        opt.value = item.name;
-        opt.textContent = item.name;
-        behaviourStudentSelect.appendChild(opt);
-      });
-      studentsStatus.textContent = "Students loaded.";
-    }
-
-    // SEATING
+    const SEAT_ROWS = 10;
+    const SEAT_COLS = 10;
     const seatingGrid = document.getElementById("seatingGrid");
-    const seatingStatus = document.getElementById("seatingStatus");
-    const resetSeatingButton = document.getElementById("resetSeatingButton");
-    const seatingLayoutSelect = document.getElementById("seatingLayoutSelect");
-    const seatImageUrl = document.getElementById("seatImageUrl");
     const seatStudentName = document.getElementById("seatStudentName");
-    const seatShapeSelect = document.getElementById("seatShapeSelect");
-    const seatingRightTitle = document.getElementById("seatingRightTitle");
-    const seatBehaviourLog = document.getElementById("seatBehaviourLog");
-    const behTagButtons = document.querySelectorAll(".beh-tag-btn");
-    const behTabs = document.querySelectorAll(".beh-tab");
-    const openNoteModalButton = document.getElementById("openNoteModalButton");
+    const seatNotes = document.getElementById("seatNotes");
+    const saveSeatButton = document.getElementById("saveSeatButton");
+    const clearSeatButton = document.getElementById("clearSeatButton");
+    const seatStatus = document.getElementById("seatStatus");
+    const resetGridButton = document.getElementById("resetGridButton");
+
+    const slidePanel = document.getElementById("slidePanel");
+    const slideToggleButton = document.getElementById("slideToggleButton");
+    const slideTitle = document.getElementById("slideTitle");
+    const slideSubtitle = document.getElementById("slideSubtitle");
+    const behaviourLog = document.getElementById("behaviourLog");
+    const behButtons = document.querySelectorAll(".beh-btn");
+    const slideTabs = document.querySelectorAll(".slide-tab");
+
+    const bottomPanel = document.getElementById("bottomPanel");
+    const bottomToggleButton = document.getElementById("bottomToggleButton");
+    const bottomButtons = document.querySelectorAll(".bottom-btn");
+    const bottomLog = document.getElementById("bottomLog");
 
     const noteModalBackdrop = document.getElementById("noteModalBackdrop");
     const noteModalText = document.getElementById("noteModalText");
     const noteCancelButton = document.getElementById("noteCancelButton");
     const noteSaveButton = document.getElementById("noteSaveButton");
-
-    const SEAT_ROWS = 4;
-    const SEAT_COLS = 6;
+    const openNoteModalButton = document.getElementById("openNoteModalButton");
 
     let currentSeatIndex = null;
+    let localSeats = {}; // index -> {name, notes, behaviours[], quickFlags[], sen, qa}
 
-    function buildEmptySeatingGrid() {
+    function buildEmptyGrid() {
       seatingGrid.innerHTML = "";
       for (let r = 0; r < SEAT_ROWS; r++) {
         for (let c = 0; c < SEAT_COLS; c++) {
@@ -1453,121 +707,243 @@
       }
     }
 
-    buildEmptySeatingGrid();
+    buildEmptyGrid();
 
-    seatingClassSelect.addEventListener("change", () => {
-      loadSeatingLayout();
-    });
+    function renderGridFromLocal() {
+      seatingGrid.querySelectorAll(".seat").forEach(div => {
+        const idx = parseInt(div.dataset.index, 10);
+        const seat = localSeats[idx];
+        if (seat && seat.name) {
+          div.classList.remove("empty");
+          div.innerHTML = `
+            <span>${seat.name}</span>
+            <small>${seat.notes ? seat.notes.slice(0, 30) + "…" : "Assigned"}</small>
+          `;
+        } else {
+          div.classList.add("empty");
+          div.innerHTML = `
+            <span>Seat ${idx + 1}</span>
+            <small>Empty</small>
+          `;
+        }
+        div.onclick = () => selectSeat(idx);
+      });
+    }
 
-    seatingLayoutSelect.addEventListener("change", () => {
-      applyLayoutChoice();
-    });
+    function clearLocalGrid() {
+      localSeats = {};
+      buildEmptyGrid();
+      currentSeatIndex = null;
+      seatStudentName.value = "";
+      seatNotes.value = "";
+      seatStatus.textContent = "No seat selected.";
+      slideTitle.textContent = "No seat selected";
+      slideSubtitle.textContent = "Select a seat to view behaviour, notes and SEN.";
+      behaviourLog.textContent = "No events yet.";
+      bottomLog.textContent = "No quick flags yet.";
+    }
 
-    resetSeatingButton.addEventListener("click", async () => {
-      if (!currentUser) {
-        seatingStatus.textContent = "Sign in to manage seating.";
-        return;
-      }
-      if (!currentRole) {
-        seatingStatus.textContent = "Choose your role before managing seating.";
-        return;
-      }
-      const cls = seatingClassSelect.value;
-      if (!cls) {
-        seatingStatus.textContent = "Select a class first.";
-        return;
-      }
+    async function loadGridFromFirestore() {
+      if (!currentUser) return;
       try {
-        const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
-        await docRef.set({ seats: [], role: currentRole, layout: seatingLayoutSelect.value || "custom", notes: {}, logs: {} }, { merge: true });
-        seatingStatus.textContent = "Seating layout cleared.";
-        loadSeatingLayout();
+        const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc("grid10x10");
+        const snap = await docRef.get();
+        if (!snap.exists) {
+          localSeats = {};
+          renderGridFromLocal();
+          seatStatus.textContent = "Empty 10×10 grid ready.";
+          return;
+        }
+        const data = snap.data();
+        localSeats = data.seats || {};
+        renderGridFromLocal();
+        seatStatus.textContent = "Grid loaded from Firestore.";
       } catch (err) {
         console.error(err);
-        seatingStatus.textContent = "Seating error: " + err.message;
+        seatStatus.textContent = "Load grid error: " + err.message;
       }
-    });
+    }
 
-    document.getElementById("addSeatButton").addEventListener("click", async () => {
+    async function saveGridToFirestore() {
+      if (!currentUser) return;
+      try {
+        const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc("grid10x10");
+        await docRef.set({ seats: localSeats }, { merge: true });
+      } catch (err) {
+        console.error(err);
+        seatStatus.textContent = "Save grid error: " + err.message;
+      }
+    }
+
+    function selectSeat(idx) {
+      currentSeatIndex = idx;
+      const seat = localSeats[idx] || {};
+      seatStudentName.value = seat.name || "";
+      seatNotes.value = seat.notes || "";
+      seatStatus.textContent = "Selected seat " + (idx + 1) + ".";
+      slideTitle.textContent = seat.name ? `Seat ${idx + 1} – ${seat.name}` : `Seat ${idx + 1}`;
+      slideSubtitle.textContent = "Use behaviour buttons and notes for this seat.";
+      renderBehaviourLogForSeat();
+      renderBottomLogForSeat();
+      slidePanel.classList.add("open");
+      slideToggleButton.textContent = "◀ Behaviour panel";
+    }
+
+    saveSeatButton.addEventListener("click", async () => {
+      if (currentSeatIndex === null) {
+        seatStatus.textContent = "Select a seat first.";
+        return;
+      }
       if (!currentUser) {
-        seatingStatus.textContent = "Sign in to manage seating.";
-        return;
-      }
-      if (!currentRole) {
-        seatingStatus.textContent = "Choose your role before managing seating.";
-        return;
-      }
-      const cls = seatingClassSelect.value;
-      if (!cls) {
-        seatingStatus.textContent = "Select a class first.";
+        seatStatus.textContent = "Sign in to save seats.";
         return;
       }
       const name = seatStudentName.value.trim();
-      const img = seatImageUrl.value.trim();
-      const shape = seatShapeSelect.value || "rectangle";
-      if (!name) {
-        seatingStatus.textContent = "Enter a student name for the desk.";
+      const notes = seatNotes.value.trim();
+      const idx = currentSeatIndex;
+      const seat = localSeats[idx] || { behaviours: [], quickFlags: [], sen: "", qa: "" };
+      seat.name = name || "";
+      seat.notes = notes || "";
+      localSeats[idx] = seat;
+      renderGridFromLocal();
+      await saveGridToFirestore();
+      seatStatus.textContent = "Seat saved.";
+      slideTitle.textContent = name ? `Seat ${idx + 1} – ${name}` : `Seat ${idx + 1}`;
+      renderBehaviourLogForSeat();
+      renderBottomLogForSeat();
+    });
+
+    clearSeatButton.addEventListener("click", async () => {
+      if (currentSeatIndex === null) {
+        seatStatus.textContent = "Select a seat first.";
         return;
       }
-      try {
-        const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
-        const snap = await docRef.get();
-        const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout: seatingLayoutSelect.value || "custom", notes: {}, logs: {} };
-        const seats = data.seats || [];
-        let index = seats.length;
-        if (index >= SEAT_ROWS * SEAT_COLS) index = SEAT_ROWS * SEAT_COLS - 1;
-        seats.push({ index, studentName: name, imageUrl: img, shape });
-        data.seats = seats;
-        data.role = currentRole || data.role;
-        await docRef.set(data);
-        seatingStatus.textContent = "Student desk added.";
-        seatStudentName.value = "";
-        seatImageUrl.value = "";
-        loadSeatingLayout();
-      } catch (err) {
-        console.error(err);
-        seatingStatus.textContent = "Seat error: " + err.message;
+      if (!currentUser) {
+        seatStatus.textContent = "Sign in to clear seats.";
+        return;
+      }
+      const idx = currentSeatIndex;
+      delete localSeats[idx];
+      renderGridFromLocal();
+      await saveGridToFirestore();
+      seatStudentName.value = "";
+      seatNotes.value = "";
+      seatStatus.textContent = "Seat cleared.";
+      slideTitle.textContent = `Seat ${idx + 1}`;
+      behaviourLog.textContent = "No events yet.";
+      bottomLog.textContent = "No quick flags yet.";
+    });
+
+    resetGridButton.addEventListener("click", async () => {
+      if (!currentUser) {
+        seatStatus.textContent = "Sign in to clear grid.";
+        return;
+      }
+      localSeats = {};
+      renderGridFromLocal();
+      currentSeatIndex = null;
+      seatStudentName.value = "";
+      seatNotes.value = "";
+      seatStatus.textContent = "Grid cleared.";
+      slideTitle.textContent = "No seat selected";
+      behaviourLog.textContent = "No events yet.";
+      bottomLog.textContent = "No quick flags yet.";
+      await saveGridToFirestore();
+    });
+
+    slideToggleButton.addEventListener("click", () => {
+      if (slidePanel.classList.contains("open")) {
+        slidePanel.classList.remove("open");
+        slideToggleButton.textContent = "▶ Behaviour panel";
+      } else {
+        slidePanel.classList.add("open");
+        slideToggleButton.textContent = "◀ Behaviour panel";
       }
     });
 
-    function selectSeat(index) {
-      currentSeatIndex = index;
-      const cls = seatingClassSelect.value || "";
-      seatingRightTitle.textContent = cls ? `Desk ${index + 1} – ${cls}` : `Desk ${index + 1}`;
-      loadSeatBehaviourLog();
-    }
-
-    behTagButtons.forEach(btn => {
+    behButtons.forEach(btn => {
       btn.addEventListener("click", async () => {
         if (currentSeatIndex === null) return;
         if (!currentUser) return;
-        const cls = seatingClassSelect.value || "";
-        if (!cls) return;
+        const idx = currentSeatIndex;
         const tag = btn.getAttribute("data-tag");
-        try {
-          const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
-          const snap = await docRef.get();
-          const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout: seatingLayoutSelect.value || "custom", notes: {}, logs: {} };
-          const logs = data.logs || {};
-          const seatKey = String(currentSeatIndex);
-          const seatLogs = logs[seatKey] || [];
-          seatLogs.push({ tag, timestamp: new Date().toISOString() });
-          logs[seatKey] = seatLogs;
-          data.logs = logs;
-          await docRef.set(data);
-          loadSeatBehaviourLog();
-        } catch (err) {
-          console.error(err);
-        }
+        const seat = localSeats[idx] || { behaviours: [], quickFlags: [], sen: "", qa: "" };
+        const behaviours = seat.behaviours || [];
+        behaviours.push({ tag, timestamp: new Date().toISOString() });
+        seat.behaviours = behaviours;
+        localSeats[idx] = seat;
+        await saveGridToFirestore();
+        renderBehaviourLogForSeat();
       });
     });
 
-    behTabs.forEach(tab => {
+    slideTabs.forEach(tab => {
       tab.addEventListener("click", () => {
-        behTabs.forEach(t => t.classList.remove("active"));
+        slideTabs.forEach(t => t.classList.remove("active"));
         tab.classList.add("active");
       });
     });
+
+    function renderBehaviourLogForSeat() {
+      if (currentSeatIndex === null) {
+        behaviourLog.textContent = "No events yet.";
+        return;
+      }
+      const seat = localSeats[currentSeatIndex] || {};
+      const behaviours = seat.behaviours || [];
+      const notes = seat.notes || "";
+      const lines = [];
+      if (behaviours.length === 0 && !notes) {
+        behaviourLog.textContent = "No events yet.";
+        return;
+      }
+      behaviours.forEach(b => {
+        lines.push(`[LOG] ${b.timestamp} – ${b.tag}`);
+      });
+      if (notes) {
+        lines.push(`[NOTES] ${notes}`);
+      }
+      behaviourLog.textContent = lines.join("\n");
+    }
+
+    bottomToggleButton.addEventListener("click", () => {
+      if (bottomPanel.classList.contains("open")) {
+        bottomPanel.classList.remove("open");
+      } else {
+        bottomPanel.classList.add("open");
+      }
+    });
+
+    bottomButtons.forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (currentSeatIndex === null) return;
+        if (!currentUser) return;
+        const idx = currentSeatIndex;
+        const tag = btn.getAttribute("data-tag");
+        const seat = localSeats[idx] || { behaviours: [], quickFlags: [], sen: "", qa: "" };
+        const quickFlags = seat.quickFlags || [];
+        quickFlags.push({ tag, timestamp: new Date().toISOString() });
+        seat.quickFlags = quickFlags;
+        localSeats[idx] = seat;
+        await saveGridToFirestore();
+        renderBottomLogForSeat();
+      });
+    });
+
+    function renderBottomLogForSeat() {
+      if (currentSeatIndex === null) {
+        bottomLog.textContent = "No quick flags yet.";
+        return;
+      }
+      const seat = localSeats[currentSeatIndex] || {};
+      const quickFlags = seat.quickFlags || [];
+      if (!quickFlags.length) {
+        bottomLog.textContent = "No quick flags yet.";
+        return;
+      }
+      const lines = quickFlags.map(f => `[FLAG] ${f.timestamp} – ${f.tag}`);
+      bottomLog.textContent = lines.join("\n");
+    }
 
     openNoteModalButton.addEventListener("click", () => {
       if (currentSeatIndex === null) return;
@@ -1582,265 +958,17 @@
     noteSaveButton.addEventListener("click", async () => {
       if (currentSeatIndex === null) return;
       if (!currentUser) return;
-      const cls = seatingClassSelect.value || "";
-      if (!cls) return;
-      const noteText = noteModalText.value.trim();
+      const text = noteModalText.value.trim();
       noteModalBackdrop.style.display = "none";
-      if (!noteText) return;
-      try {
-        const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
-        const snap = await docRef.get();
-        const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout: seatingLayoutSelect.value || "custom", notes: {}, logs: {} };
-        const notes = data.notes || {};
-        const seatKey = String(currentSeatIndex);
-        const seatNotes = notes[seatKey] || [];
-        seatNotes.push({ text: noteText, timestamp: new Date().toISOString() });
-        notes[seatKey] = seatNotes;
-        data.notes = notes;
-        await docRef.set(data);
-        loadSeatBehaviourLog();
-      } catch (err) {
-        console.error(err);
-      }
-    });
-
-    async function loadSeatBehaviourLog() {
-      const cls = seatingClassSelect.value || "";
-      if (!currentUser || !cls || currentSeatIndex === null) {
-        seatBehaviourLog.textContent = "No events yet.";
-        return;
-      }
-      try {
-        const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
-        const snap = await docRef.get();
-        const data = snap.data();
-        if (!data) {
-          seatBehaviourLog.textContent = "No events yet.";
-          return;
-        }
-        const logs = data.logs || {};
-        const notes = data.notes || {};
-        const seatKey = String(currentSeatIndex);
-        const seatLogs = logs[seatKey] || [];
-        const seatNotes = notes[seatKey] || [];
-        if (!seatLogs.length && !seatNotes.length) {
-          seatBehaviourLog.textContent = "No events yet.";
-          return;
-        }
-        const lines = [];
-        seatLogs.forEach(l => {
-          lines.push(`[LOG] ${l.timestamp} – ${l.tag}`);
-        });
-        seatNotes.forEach(n => {
-          lines.push(`[NOTE] ${n.timestamp} – ${n.text}`);
-        });
-        seatBehaviourLog.textContent = lines.join("\n");
-      } catch (err) {
-        console.error(err);
-        seatBehaviourLog.textContent = "Error loading log.";
-      }
-    }
-
-    async function loadSeatingLayout() {
-      const cls = seatingClassSelect.value;
-      currentSeatIndex = null;
-      seatingRightTitle.textContent = "No desk selected";
-      seatBehaviourLog.textContent = "No events yet.";
-
-      if (!currentUser || !cls) {
-        buildEmptySeatingGrid();
-        seatingStatus.textContent = "Choose a class to manage seating.";
-        return;
-      }
-      buildEmptySeatingGrid();
-      try {
-        const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
-        const snap = await docRef.get();
-        const data = snap.data();
-        if (!data) {
-          seatingStatus.textContent = "No seating layout yet for " + cls + ". Choose a layout or add desks.";
-          return;
-        }
-        const seats = data.seats || [];
-        const layout = data.layout || "custom";
-        seatingLayoutSelect.value = layout;
-        applyLayoutChoiceFromData(seats);
-        seatingStatus.textContent = "Seating layout loaded for " + cls + ".";
-      } catch (err) {
-        console.error(err);
-        seatingStatus.textContent = "Load seating error: " + err.message;
-      }
-    }
-
-    function applyLayoutChoice() {
-      const cls = seatingClassSelect.value;
-      if (!currentUser || !cls) {
-        seatingStatus.textContent = "Select a class first.";
-        return;
-      }
-      const layout = seatingLayoutSelect.value || "custom";
-      db.collection("users").doc(currentUser.uid).collection("seating").doc(cls)
-        .set({ layout }, { merge: true })
-        .then(() => {
-          generateLayoutDesks(layout);
-        })
-        .catch(err => console.error(err));
-    }
-
-    async function generateLayoutDesks(layout) {
-      const cls = seatingClassSelect.value;
-      if (!currentUser || !cls) return;
-      try {
-        const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
-        const snap = await docRef.get();
-        const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout, notes: {}, logs: {} };
-        let seats = [];
-        if (layout === "custom") {
-          seats = data.seats || [];
-        } else if (layout === "diagonal") {
-          seats = [];
-          const indices = [0, 7, 14, 21, 5, 10, 15, 20, 3, 9, 18, 23];
-          indices.forEach((idx, i) => {
-            seats.push({ index: idx, studentName: "Desk " + (i + 1), imageUrl: "", shape: "rectangle" });
-          });
-        } else if (layout === "horizontal") {
-          seats = [];
-          const indices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-          indices.forEach((idx, i) => {
-            seats.push({ index: idx, studentName: "Desk " + (i + 1), imageUrl: "", shape: "rectangle" });
-          });
-        } else if (layout === "both") {
-          seats = [];
-          const diag = [0, 7, 14, 21, 5, 10];
-          const horiz = [1, 2, 3, 4, 6, 8, 9, 11];
-          let i = 0;
-          diag.forEach(idx => {
-            seats.push({ index: idx, studentName: "Diag " + (++i), imageUrl: "", shape: "rectangle" });
-          });
-          horiz.forEach(idx => {
-            seats.push({ index: idx, studentName: "Horiz " + (++i), imageUrl: "", shape: "rectangle" });
-          });
-        }
-        data.seats = seats;
-        data.role = currentRole || data.role;
-        await docRef.set(data);
-        loadSeatingLayout();
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    function applyLayoutChoiceFromData(seats) {
-      buildEmptySeatingGrid();
-      seats.forEach(s => {
-        const div = seatingGrid.querySelector('[data-index="' + s.index + '"]');
-        if (div) {
-          div.classList.remove("empty");
-          div.innerHTML = `
-            <span>${s.studentName || ("Seat " + (s.index + 1))}</span>
-            <small>${s.shape || "rectangle"}</small>
-          `;
-          div.addEventListener("click", () => {
-            selectSeat(s.index);
-          });
-        }
-      });
-    }
-
-    // EXPORT
-    const generateCsvButton = document.getElementById("generateCsvButton");
-    const copyCsvButton = document.getElementById("copyCsvButton");
-    const csvOutput = document.getElementById("csvOutput");
-    const exportStatus = document.getElementById("exportStatus");
-
-    generateCsvButton.addEventListener("click", async () => {
-      if (!currentUser) {
-        exportStatus.textContent = "Sign in to generate CSV.";
-        return;
-      }
-      try {
-        const eventsRef = db.collection("users").doc(currentUser.uid).collection("behaviourLogs").orderBy("timestamp", "asc");
-        const snap = await eventsRef.get();
-        if (snap.empty) {
-          csvOutput.textContent = "No behaviour events logged.";
-          exportStatus.textContent = "No events to export.";
-          return;
-        }
-        const rows = [["timestamp", "class", "student", "stage", "role"]];
-        snap.forEach(doc => {
-          const d = doc.data();
-          rows.push([
-            d.timestamp || "",
-            d.className || "",
-            d.studentName || "",
-            d.stage || "",
-            d.role || "",
-          ]);
-        });
-        const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
-        csvOutput.textContent = csv;
-        exportStatus.textContent = "CSV generated.";
-      } catch (err) {
-        console.error(err);
-        exportStatus.textContent = "CSV error: " + err.message;
-      }
-    });
-
-    copyCsvButton.addEventListener("click", async () => {
-      const text = csvOutput.textContent || "";
-      if (!text || text === "No behaviour events logged." || text === "No CSV generated yet.") {
-        exportStatus.textContent = "Generate CSV first.";
-        return;
-      }
-      try {
-        await navigator.clipboard.writeText(text);
-        exportStatus.textContent = "CSV copied to clipboard.";
-      } catch (err) {
-        console.error(err);
-        exportStatus.textContent = "Could not copy CSV: " + err.message;
-      }
-    });
-
-    function attachDataListeners() {
-      if (behaviourCountersUnsub) { behaviourCountersUnsub(); behaviourCountersUnsub = null; }
-      if (studentsUnsub) { studentsUnsub(); studentsUnsub = null; }
-
-      attachBehaviourListener();
-      attachStudentsListener();
-      loadClassesOnce();
-    }
-
-    function resetUIData() {
-      c1CountSpan.textContent = "0";
-      c2CountSpan.textContent = "0";
-      c3CountSpan.textContent = "0";
-      c4CountSpan.textContent = "0";
-      localClasses = [];
-      renderClassesInstant();
-      studentsList.innerHTML = "";
-      studentsStatus.textContent = "No students yet.";
-      csvOutput.textContent = "No CSV generated yet.";
-      exportStatus.textContent = "CSV includes timestamp, class, student, stage, role.";
-      buildEmptySeatingGrid();
-      seatingStatus.textContent = "Choose a class to manage seating.";
-      seatingLayoutSelect.value = "custom";
-    }
-
-    auth.onAuthStateChanged(user => {
-      currentUser = user;
-      if (user) {
-        userPill.style.display = "flex";
-        userEmailSpan.textContent = user.email || "Signed in";
-        authStatus.textContent = "Signed in as " + (user.email || "user");
-        attachDataListeners();
-      } else {
-        userPill.style.display = "none";
-        userEmailSpan.textContent = "";
-        authStatus.textContent = "Not signed in.";
-        if (behaviourCountersUnsub) { behaviourCountersUnsub(); behaviourCountersUnsub = null; }
-        if (studentsUnsub) { studentsUnsub(); studentsUnsub = null; }
-        resetUIData();
-      }
+      if (!text) return;
+      const idx = currentSeatIndex;
+      const seat = localSeats[idx] || { behaviours: [], quickFlags: [], sen: "", qa: "" };
+      seat.notes = seat.notes ? (seat.notes + "\n" + text) : text;
+      localSeats[idx] = seat;
+      await saveGridToFirestore();
+      seatNotes.value = seat.notes;
+      renderBehaviourLogForSeat();
+      seatStatus.textContent = "Note added to seat.";
     });
   </script>
 </body>
