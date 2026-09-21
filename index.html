@@ -463,6 +463,18 @@
       justify-content: flex-end;
       gap: 6px;
     }
+
+    .beh-remove {
+      background: none;
+      border: none;
+      color: #6b7280;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-left: 6px;
+    }
+    .beh-remove:hover {
+      color: #ef4444;
+    }
   </style>
 </head>
 <body>
@@ -808,15 +820,19 @@
 
     function selectSeat(idx) {
       currentSeatIndex = idx;
+
       const seat = localSeats[idx] || {};
       seatStudentName.value = seat.name || "";
       seatNotes.value = seat.notes || "";
+
       seatStatus.textContent = "Selected seat " + (idx + 1) + ".";
       slideTitle.textContent = seat.name ? `Seat ${idx + 1} – ${seat.name}` : `Seat ${idx + 1}`;
       slideSubtitle.textContent = "Use behaviour buttons and notes for this seat.";
-      renderBehaviourLogForSeat();
+
       slidePanel.classList.add("open");
       slideToggleButton.textContent = "◀ Behaviour panel";
+
+      renderBehaviourLogForSeat();
     }
 
     newSaveSeatButton.addEventListener("click", async () => {
@@ -962,26 +978,47 @@
       const quickFlags = seat.quickFlags || [];
       const points = seat.points || 0;
 
-      const lines = [];
+      let html = `<strong>Points: ${points}</strong><br><br>`;
 
-      lines.push(`Points: ${points}`);
-      lines.push("");
-
-      behaviours.forEach(b => {
-        lines.push(`${b.icon}  ${b.timestamp} – ${b.tag}`);
+      behaviours.forEach((b, index) => {
+        html += `
+          ${b.icon} ${b.timestamp} – ${b.tag}
+          <button class="beh-remove" onclick="removeBehaviour(${currentSeatIndex}, ${index})">🗑️</button>
+          <br>
+        `;
       });
 
-      quickFlags.forEach(f => {
-        lines.push(`🔵 FLAG ${f.timestamp} – ${f.tag}`);
+      quickFlags.forEach((f, index) => {
+        html += `
+          🔵 FLAG ${f.timestamp} – ${f.tag}
+          <button class="beh-remove" onclick="removeQuickFlag(${currentSeatIndex}, ${index})">🗑️</button>
+          <br>
+        `;
       });
 
       if (notes) {
-        lines.push("");
-        lines.push(`📝 NOTES`);
-        lines.push(notes);
+        html += `<br><strong>📝 NOTES</strong><br>${notes}`;
       }
 
-      behaviourLog.textContent = lines.join("\n");
+      behaviourLog.innerHTML = html;
+    }
+
+    async function removeBehaviour(seatIndex, behaviourIndex) {
+      const seat = localSeats[seatIndex];
+      if (!seat) return;
+
+      seat.behaviours.splice(behaviourIndex, 1);
+      await saveGridToFirestore();
+      renderBehaviourLogForSeat();
+    }
+
+    async function removeQuickFlag(seatIndex, flagIndex) {
+      const seat = localSeats[seatIndex];
+      if (!seat) return;
+
+      seat.quickFlags.splice(flagIndex, 1);
+      await saveGridToFirestore();
+      renderBehaviourLogForSeat();
     }
 
     function openOverlay(type) {
