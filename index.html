@@ -1102,16 +1102,14 @@
     async function updateBehaviourCount(type, delta) {
       try {
         const docRef = db.collection("users").doc(currentUser.uid).collection("behaviourCounters").doc("main");
-        await db.runTransaction(async tx => {
-          const snap = await tx.get(docRef);
-          const data = snap.exists ? snap.data() : { c1: 0, c2: 0, c3: 0, c4: 0, role: currentRole || null };
-          const key = type;
-          let newVal = (data[key] || 0) + delta;
-          if (newVal < 0) newVal = 0;
-          data[key] = newVal;
-          data.role = currentRole || data.role;
-          tx.set(docRef, data);
-        });
+        const snap = await docRef.get();
+        const data = snap.exists ? snap.data() : { c1: 0, c2: 0, c3: 0, c4: 0, role: currentRole || null };
+        const key = type;
+        let newVal = (data[key] || 0) + delta;
+        if (newVal < 0) newVal = 0;
+        data[key] = newVal;
+        data.role = currentRole || data.role;
+        await docRef.set(data);
         behaviourStatus.textContent = "Behaviour updated (" + type.toUpperCase() + ").";
       } catch (err) {
         console.error(err);
@@ -1167,7 +1165,7 @@
       });
     }
 
-    // --- CLASSES (v6 instant UI version) ---
+    // CLASSES
     const newClassName = document.getElementById("newClassName");
     const newClassRoom = document.getElementById("newClassRoom");
     const newClassYear = document.getElementById("newClassYear");
@@ -1221,7 +1219,7 @@
               seatingClassSelect.value = item.name;
               behaviourClassSelect.value = item.name;
               classesStatus.textContent = "Selected class: " + item.name;
-              loadSeatingLayout(); // open seating for this class
+              loadSeatingLayout();
             });
           }
         });
@@ -1419,7 +1417,6 @@
     const seatImageUrl = document.getElementById("seatImageUrl");
     const seatStudentName = document.getElementById("seatStudentName");
     const seatShapeSelect = document.getElementById("seatShapeSelect");
-    const addSeatButton = document.getElementById("addSeatButton");
     const seatingRightTitle = document.getElementById("seatingRightTitle");
     const seatBehaviourLog = document.getElementById("seatBehaviourLog");
     const behTagButtons = document.querySelectorAll(".beh-tag-btn");
@@ -1482,7 +1479,7 @@
       }
       try {
         const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
-        await docRef.set({ seats: [], role: currentRole, layout: seatingLayoutSelect.value || "custom", notes: {} }, { merge: true });
+        await docRef.set({ seats: [], role: currentRole, layout: seatingLayoutSelect.value || "custom", notes: {}, logs: {} }, { merge: true });
         seatingStatus.textContent = "Seating layout cleared.";
         loadSeatingLayout();
       } catch (err) {
@@ -1491,7 +1488,7 @@
       }
     });
 
-    addSeatButton.addEventListener("click", async () => {
+    document.getElementById("addSeatButton").addEventListener("click", async () => {
       if (!currentUser) {
         seatingStatus.textContent = "Sign in to manage seating.";
         return;
@@ -1514,17 +1511,15 @@
       }
       try {
         const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
-        await db.runTransaction(async tx => {
-          const snap = await tx.get(docRef);
-          const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout: seatingLayoutSelect.value || "custom", notes: {} };
-          const seats = data.seats || [];
-          let index = seats.length;
-          if (index >= SEAT_ROWS * SEAT_COLS) index = SEAT_ROWS * SEAT_COLS - 1;
-          seats.push({ index, studentName: name, imageUrl: img, shape });
-          data.seats = seats;
-          data.role = currentRole || data.role;
-          tx.set(docRef, data);
-        });
+        const snap = await docRef.get();
+        const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout: seatingLayoutSelect.value || "custom", notes: {}, logs: {} };
+        const seats = data.seats || [];
+        let index = seats.length;
+        if (index >= SEAT_ROWS * SEAT_COLS) index = SEAT_ROWS * SEAT_COLS - 1;
+        seats.push({ index, studentName: name, imageUrl: img, shape });
+        data.seats = seats;
+        data.role = currentRole || data.role;
+        await docRef.set(data);
         seatingStatus.textContent = "Student desk added.";
         seatStudentName.value = "";
         seatImageUrl.value = "";
@@ -1551,17 +1546,15 @@
         const tag = btn.getAttribute("data-tag");
         try {
           const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
-          await db.runTransaction(async tx => {
-            const snap = await tx.get(docRef);
-            const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout: seatingLayoutSelect.value || "custom", notes: {} };
-            const logs = data.logs || {};
-            const seatKey = String(currentSeatIndex);
-            const seatLogs = logs[seatKey] || [];
-            seatLogs.push({ tag, timestamp: new Date().toISOString() });
-            logs[seatKey] = seatLogs;
-            data.logs = logs;
-            tx.set(docRef, data);
-          });
+          const snap = await docRef.get();
+          const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout: seatingLayoutSelect.value || "custom", notes: {}, logs: {} };
+          const logs = data.logs || {};
+          const seatKey = String(currentSeatIndex);
+          const seatLogs = logs[seatKey] || [];
+          seatLogs.push({ tag, timestamp: new Date().toISOString() });
+          logs[seatKey] = seatLogs;
+          data.logs = logs;
+          await docRef.set(data);
           loadSeatBehaviourLog();
         } catch (err) {
           console.error(err);
@@ -1596,17 +1589,15 @@
       if (!noteText) return;
       try {
         const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
-        await db.runTransaction(async tx => {
-          const snap = await tx.get(docRef);
-          const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout: seatingLayoutSelect.value || "custom", notes: {} };
-          const notes = data.notes || {};
-          const seatKey = String(currentSeatIndex);
-          const seatNotes = notes[seatKey] || [];
-          seatNotes.push({ text: noteText, timestamp: new Date().toISOString() });
-          notes[seatKey] = seatNotes;
-          data.notes = notes;
-          tx.set(docRef, data);
-        });
+        const snap = await docRef.get();
+        const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout: seatingLayoutSelect.value || "custom", notes: {}, logs: {} };
+        const notes = data.notes || {};
+        const seatKey = String(currentSeatIndex);
+        const seatNotes = notes[seatKey] || [];
+        seatNotes.push({ text: noteText, timestamp: new Date().toISOString() });
+        notes[seatKey] = seatNotes;
+        data.notes = notes;
+        await docRef.set(data);
         loadSeatBehaviourLog();
       } catch (err) {
         console.error(err);
@@ -1673,7 +1664,7 @@
         const seats = data.seats || [];
         const layout = data.layout || "custom";
         seatingLayoutSelect.value = layout;
-        applyLayoutChoiceFromData(seats, layout);
+        applyLayoutChoiceFromData(seats);
         seatingStatus.textContent = "Seating layout loaded for " + cls + ".";
       } catch (err) {
         console.error(err);
@@ -1701,47 +1692,45 @@
       if (!currentUser || !cls) return;
       try {
         const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc(cls);
-        await db.runTransaction(async tx => {
-          const snap = await tx.get(docRef);
-          const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout, notes: {} };
-          let seats = [];
-          if (layout === "custom") {
-            seats = data.seats || [];
-          } else if (layout === "diagonal") {
-            seats = [];
-            const indices = [0, 7, 14, 21, 5, 10, 15, 20, 3, 9, 18, 23];
-            indices.forEach((idx, i) => {
-              seats.push({ index: idx, studentName: "Desk " + (i + 1), imageUrl: "", shape: "rectangle" });
-            });
-          } else if (layout === "horizontal") {
-            seats = [];
-            const indices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-            indices.forEach((idx, i) => {
-              seats.push({ index: idx, studentName: "Desk " + (i + 1), imageUrl: "", shape: "rectangle" });
-            });
-          } else if (layout === "both") {
-            seats = [];
-            const diag = [0, 7, 14, 21, 5, 10];
-            const horiz = [1, 2, 3, 4, 6, 8, 9, 11];
-            let i = 0;
-            diag.forEach(idx => {
-              seats.push({ index: idx, studentName: "Diag " + (++i), imageUrl: "", shape: "rectangle" });
-            });
-            horiz.forEach(idx => {
-              seats.push({ index: idx, studentName: "Horiz " + (++i), imageUrl: "", shape: "rectangle" });
-            });
-          }
-          data.seats = seats;
-          data.role = currentRole || data.role;
-          tx.set(docRef, data);
-        });
+        const snap = await docRef.get();
+        const data = snap.exists ? snap.data() : { seats: [], role: currentRole || null, layout, notes: {}, logs: {} };
+        let seats = [];
+        if (layout === "custom") {
+          seats = data.seats || [];
+        } else if (layout === "diagonal") {
+          seats = [];
+          const indices = [0, 7, 14, 21, 5, 10, 15, 20, 3, 9, 18, 23];
+          indices.forEach((idx, i) => {
+            seats.push({ index: idx, studentName: "Desk " + (i + 1), imageUrl: "", shape: "rectangle" });
+          });
+        } else if (layout === "horizontal") {
+          seats = [];
+          const indices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+          indices.forEach((idx, i) => {
+            seats.push({ index: idx, studentName: "Desk " + (i + 1), imageUrl: "", shape: "rectangle" });
+          });
+        } else if (layout === "both") {
+          seats = [];
+          const diag = [0, 7, 14, 21, 5, 10];
+          const horiz = [1, 2, 3, 4, 6, 8, 9, 11];
+          let i = 0;
+          diag.forEach(idx => {
+            seats.push({ index: idx, studentName: "Diag " + (++i), imageUrl: "", shape: "rectangle" });
+          });
+          horiz.forEach(idx => {
+            seats.push({ index: idx, studentName: "Horiz " + (++i), imageUrl: "", shape: "rectangle" });
+          });
+        }
+        data.seats = seats;
+        data.role = currentRole || data.role;
+        await docRef.set(data);
         loadSeatingLayout();
       } catch (err) {
         console.error(err);
       }
     }
 
-    function applyLayoutChoiceFromData(seats, layout) {
+    function applyLayoutChoiceFromData(seats) {
       buildEmptySeatingGrid();
       seats.forEach(s => {
         const div = seatingGrid.querySelector('[data-index="' + s.index + '"]');
