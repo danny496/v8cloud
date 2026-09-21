@@ -81,6 +81,7 @@
       font-size: 0.7rem;
       cursor: pointer;
     }
+
     .main-layout {
       display: grid;
       grid-template-columns: 260px 1fr;
@@ -88,6 +89,7 @@
       background: #f3f4f6;
       position: relative;
     }
+
     .sidebar {
       border-right: 1px solid #e5e7eb;
       background: #f9fafb;
@@ -896,26 +898,12 @@
         const idx = currentSeatIndex;
         const tag = btn.getAttribute("data-tag");
         const seat = localSeats[idx] || { behaviours: [], quickFlags: [] };
-        const behaviours = seat.behaviours || seat.behaviours === undefined ? seat.behaviours : seat.behaviours;
-        // normalise property
-        const list = seat.behaviours || seat.behaviours === undefined ? seat.behaviours : seat.behaviours;
-      });
-    });
-
-    // Fix behaviour saving properly
-    behButtons.forEach(btn => {
-      btn.onclick = async () => {
-        if (currentSeatIndex === null) return;
-        if (!currentUser) return;
-        const idx = currentSeatIndex;
-        const tag = btn.getAttribute("data-tag");
-        const seat = localSeats[idx] || { behaviours: [], quickFlags: [] };
         if (!seat.behaviours) seat.behaviours = [];
         seat.behaviours.push({ tag, timestamp: new Date().toISOString() });
         localSeats[idx] = seat;
         await saveGridToFirestore();
         renderBehaviourLogForSeat();
-      };
+      });
     });
 
     slideTabs.forEach(tab => {
@@ -933,13 +921,17 @@
       const seat = localSeats[currentSeatIndex] || {};
       const behaviours = seat.behaviours || [];
       const notes = seat.notes || "";
+      const quickFlags = seat.quickFlags || [];
       const lines = [];
-      if (behaviours.length === 0 && !notes) {
+      if (behaviours.length === 0 && !notes && quickFlags.length === 0) {
         behaviourLog.textContent = "No events yet.";
         return;
       }
       behaviours.forEach(b => {
         lines.push(`[LOG] ${b.timestamp} – ${b.tag}`);
+      });
+      quickFlags.forEach(f => {
+        lines.push(`[FLAG] ${f.timestamp} – ${f.tag}`);
       });
       if (notes) {
         lines.push(`[NOTES] ${notes}`);
