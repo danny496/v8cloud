@@ -333,7 +333,7 @@
       background: #f9fafb;
       padding: 6px;
       font-size: 0.75rem;
-      max-height: 160px;
+      max-height: 180px;
       overflow-y: auto;
       white-space: pre-wrap;
     }
@@ -606,10 +606,10 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyBp0Yy1xR6u3DPVdqIeDYu9nzYFZej71pQ",
+      apiKey: "AIzaSyBp0Yy1xR6u3DPVdqIeDYu9nzYFEzj71pQ",
       authDomain: "classes-91da0.firebaseapp.com",
       projectId: "classes-91da0",
-      storageBucket: "classes-91da0.firebasestorage.app",
+      storageBucket: "classes-91da0.appspot.com",
       messagingSenderId: "595282169529",
       appId: "1:595282169529:web:8e53f84303fe9613f29568",
       measurementId: "G-029JSPE48Z"
@@ -837,7 +837,8 @@
         name: "",
         notes: "",
         behaviours: [],
-        quickFlags: []
+        quickFlags: [],
+        points: 0
       };
 
       seat.name = name;
@@ -903,16 +904,39 @@
       btn.addEventListener("click", async () => {
         if (currentSeatIndex === null) return;
         if (!currentUser) return;
+
         const idx = currentSeatIndex;
         const tag = btn.getAttribute("data-tag");
+
         const seat = localSeats[idx] || {
           name: "",
           notes: "",
           behaviours: [],
-          quickFlags: []
+          quickFlags: [],
+          points: 0
         };
-        if (!seat.behaviours) seat.behaviours = [];
-        seat.behaviours.push({ tag, timestamp: new Date().toISOString() });
+
+        if (tag.includes("P1")) seat.points += 1;
+        if (tag.includes("P2")) seat.points += 2;
+        if (tag.includes("P3")) seat.points += 3;
+        if (tag.includes("P4")) seat.points += 4;
+        if (tag.includes("Star")) seat.points += 10;
+
+        if (tag === "C1") seat.points -= 1;
+        if (tag === "C2") seat.points -= 2;
+        if (tag === "C3") seat.points -= 3;
+        if (tag === "C4") seat.points -= 4;
+
+        const icon = tag.startsWith("P") || tag.includes("Star")
+          ? "🟢 O"
+          : "🔴 O";
+
+        seat.behaviours.push({
+          tag,
+          icon,
+          timestamp: new Date().toISOString()
+        });
+
         localSeats[idx] = seat;
         await saveGridToFirestore();
         renderBehaviourLogForSeat();
@@ -931,24 +955,32 @@
         behaviourLog.textContent = "No events yet.";
         return;
       }
+
       const seat = localSeats[currentSeatIndex] || {};
       const behaviours = seat.behaviours || [];
       const notes = seat.notes || "";
       const quickFlags = seat.quickFlags || [];
+      const points = seat.points || 0;
+
       const lines = [];
-      if (behaviours.length === 0 && !notes && quickFlags.length === 0) {
-        behaviourLog.textContent = "No events yet.";
-        return;
-      }
+
+      lines.push(`Points: ${points}`);
+      lines.push("");
+
       behaviours.forEach(b => {
-        lines.push(`[LOG] ${b.timestamp} – ${b.tag}`);
+        lines.push(`${b.icon}  ${b.timestamp} – ${b.tag}`);
       });
+
       quickFlags.forEach(f => {
-        lines.push(`[FLAG] ${f.timestamp} – ${f.tag}`);
+        lines.push(`🔵 FLAG ${f.timestamp} – ${f.tag}`);
       });
+
       if (notes) {
-        lines.push(`[NOTES] ${notes}`);
+        lines.push("");
+        lines.push(`📝 NOTES`);
+        lines.push(notes);
       }
+
       behaviourLog.textContent = lines.join("\n");
     }
 
@@ -991,7 +1023,8 @@
         name: "",
         notes: "",
         behaviours: [],
-        quickFlags: []
+        quickFlags: [],
+        points: 0
       };
       if (!seat.quickFlags) seat.quickFlags = [];
       seat.quickFlags.push({ tag, timestamp: new Date().toISOString() });
@@ -1038,7 +1071,8 @@
         name: "",
         notes: "",
         behaviours: [],
-        quickFlags: []
+        quickFlags: [],
+        points: 0
       };
       seat.notes = seat.notes ? (seat.notes + "\n" + text) : text;
       localSeats[idx] = seat;
