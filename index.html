@@ -508,7 +508,7 @@
             <textarea id="seatNotes" placeholder="Notes (SEN, behaviour, pastoral, etc.)"></textarea>
           </div>
           <div class="input-row">
-            <button class="btn btn-primary" id="saveSeatButton">Save to selected seat</button>
+            <button class="btn btn-primary" id="newSaveSeatButton">Save Student</button>
             <button class="btn btn-danger" id="clearSeatButton">Clear selected seat</button>
           </div>
           <div class="status-line" id="seatStatus">No seat selected.</div>
@@ -606,10 +606,10 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyBp0Yy1xR6u3DPVdqIeDYu9nzYFEzj71pQ",
+      apiKey: "AIzaSyBp0Yy1xR6u3DPVdqIeDYu9nzYFZej71pQ",
       authDomain: "classes-91da0.firebaseapp.com",
       projectId: "classes-91da0",
-      storageBucket: "classes-91da0.appspot.com",
+      storageBucket: "classes-91da0.firebasestorage.app",
       messagingSenderId: "595282169529",
       appId: "1:595282169529:web:8e53f84303fe9613f29568",
       measurementId: "G-029JSPE48Z"
@@ -636,7 +636,6 @@
         const provider = new firebase.auth.GoogleAuthProvider();
         await auth.signInWithPopup(provider);
       } catch (err) {
-        console.error(err);
         authStatus.textContent = "Google login error: " + err.message;
       }
     });
@@ -691,7 +690,7 @@
     const seatingGrid = document.getElementById("seatingGrid");
     const seatStudentName = document.getElementById("seatStudentName");
     const seatNotes = document.getElementById("seatNotes");
-    const saveSeatButton = document.getElementById("saveSeatButton");
+    const newSaveSeatButton = document.getElementById("newSaveSeatButton");
     const clearSeatButton = document.getElementById("clearSeatButton");
     const seatStatus = document.getElementById("seatStatus");
     const resetGridButton = document.getElementById("resetGridButton");
@@ -793,7 +792,6 @@
         renderGridFromLocal();
         seatStatus.textContent = "Grid loaded from Firestore.";
       } catch (err) {
-        console.error(err);
         seatStatus.textContent = "Load grid error: " + err.message;
       }
     }
@@ -804,7 +802,6 @@
         const docRef = db.collection("users").doc(currentUser.uid).collection("seating").doc("grid10x10");
         await docRef.set({ seats: localSeats }, { merge: true });
       } catch (err) {
-        console.error(err);
         seatStatus.textContent = "Save grid error: " + err.message;
       }
     }
@@ -822,7 +819,7 @@
       slideToggleButton.textContent = "◀ Behaviour panel";
     }
 
-    saveSeatButton.addEventListener("click", async () => {
+    newSaveSeatButton.addEventListener("click", async () => {
       if (currentSeatIndex === null) {
         seatStatus.textContent = "Select a seat first.";
         return;
@@ -831,16 +828,27 @@
         seatStatus.textContent = "Sign in to save seats.";
         return;
       }
+
+      const idx = currentSeatIndex;
       const name = seatStudentName.value.trim();
       const notes = seatNotes.value.trim();
-      const idx = currentSeatIndex;
-      const seat = localSeats[idx] || { behaviours: [], quickFlags: [] };
-      seat.name = name || "";
-      seat.notes = notes || "";
+
+      const seat = localSeats[idx] || {
+        name: "",
+        notes: "",
+        behaviours: [],
+        quickFlags: []
+      };
+
+      seat.name = name;
+      seat.notes = notes;
+
       localSeats[idx] = seat;
+
       renderGridFromLocal();
       await saveGridToFirestore();
-      seatStatus.textContent = "Seat saved.";
+
+      seatStatus.textContent = "Student saved.";
       slideTitle.textContent = name ? `Seat ${idx + 1} – ${name}` : `Seat ${idx + 1}`;
       renderBehaviourLogForSeat();
     });
@@ -897,7 +905,12 @@
         if (!currentUser) return;
         const idx = currentSeatIndex;
         const tag = btn.getAttribute("data-tag");
-        const seat = localSeats[idx] || { behaviours: [], quickFlags: [] };
+        const seat = localSeats[idx] || {
+          name: "",
+          notes: "",
+          behaviours: [],
+          quickFlags: []
+        };
         if (!seat.behaviours) seat.behaviours = [];
         seat.behaviours.push({ tag, timestamp: new Date().toISOString() });
         localSeats[idx] = seat;
@@ -974,7 +987,12 @@
       if (currentSeatIndex === null) return;
       if (!currentUser) return;
       const idx = currentSeatIndex;
-      const seat = localSeats[idx] || { behaviours: [], quickFlags: [] };
+      const seat = localSeats[idx] || {
+        name: "",
+        notes: "",
+        behaviours: [],
+        quickFlags: []
+      };
       if (!seat.quickFlags) seat.quickFlags = [];
       seat.quickFlags.push({ tag, timestamp: new Date().toISOString() });
       localSeats[idx] = seat;
@@ -1016,7 +1034,12 @@
       noteModalBackdrop.style.display = "none";
       if (!text) return;
       const idx = currentSeatIndex;
-      const seat = localSeats[idx] || { behaviours: [], quickFlags: [] };
+      const seat = localSeats[idx] || {
+        name: "",
+        notes: "",
+        behaviours: [],
+        quickFlags: []
+      };
       seat.notes = seat.notes ? (seat.notes + "\n" + text) : text;
       localSeats[idx] = seat;
       await saveGridToFirestore();
