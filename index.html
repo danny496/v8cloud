@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>v8cloud – V6 Sliding Panels (10×10)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Firebase v9 compat -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -185,7 +185,6 @@
       overflow: hidden;
     }
 
-    /* Seating grid 10×10 */
     .seating-wrapper {
       display: flex;
       flex-direction: column;
@@ -232,7 +231,6 @@
       opacity: 0.7;
     }
 
-    /* Sliding panels */
     .slide-toggle {
       position: absolute;
       top: 50%;
@@ -338,7 +336,6 @@
       white-space: pre-wrap;
     }
 
-    /* Toilet / Uniform panel */
     .bottom-panel-toggle {
       position: absolute;
       bottom: 0;
@@ -391,7 +388,6 @@
       cursor: pointer;
     }
 
-    /* Note modal */
     .note-modal-backdrop {
       position: fixed;
       inset: 0;
@@ -494,12 +490,10 @@
           <div class="seating-grid" id="seatingGrid"></div>
         </div>
 
-        <!-- Right slide toggle -->
         <div class="slide-toggle">
           <button id="slideToggleButton">▶ Behaviour panel</button>
         </div>
 
-        <!-- Right slide panel -->
         <div class="slide-panel" id="slidePanel">
           <h3 id="slideTitle">No seat selected</h3>
           <div class="panel-subtitle" id="slideSubtitle">Select a seat to view behaviour, notes and SEN.</div>
@@ -540,12 +534,10 @@
           <button class="btn btn-secondary" id="openNoteModalButton">Add note to seat</button>
         </div>
 
-        <!-- Bottom panel toggle -->
         <div class="bottom-panel-toggle">
           <button id="bottomToggleButton">Toilet / Uniform</button>
         </div>
 
-        <!-- Bottom panel -->
         <div class="bottom-panel" id="bottomPanel">
           <div style="font-weight:600;color:#111827;">Quick flags</div>
           <div class="bottom-buttons">
@@ -561,7 +553,6 @@
     </div>
   </div>
 
-  <!-- Note modal -->
   <div class="note-modal-backdrop" id="noteModalBackdrop">
     <div class="note-modal">
       <h3>Add note to seat</h3>
@@ -575,7 +566,7 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyBp0Yy1xR6u3DPVdqIeDYu9nzYFZej71pQ",
+      apiKey: "AIzaSyBp0Yy1xR6u3DPVdqIeDYu9nzYFEzj71pQ",
       authDomain: "classes-91da0.firebaseapp.com",
       projectId: "classes-91da0",
       storageBucket: "classes-91da0.appspot.com",
@@ -685,7 +676,7 @@
     const openNoteModalButton = document.getElementById("openNoteModalButton");
 
     let currentSeatIndex = null;
-    let localSeats = {}; // index -> {name, notes, behaviours[], quickFlags[], sen, qa}
+    let localSeats = {};
 
     function buildEmptyGrid() {
       seatingGrid.innerHTML = "";
